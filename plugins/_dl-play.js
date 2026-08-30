@@ -3,44 +3,48 @@ import yts from 'yt-search'
 
 const handler = async (m, { conn, text, usedPrefix, command }) => {
     try {
-        if (!text.trim()) return await conn.reply(m.chat, '*⭐ Ingresa el nombre o enlace de la canción.*', m)
-        
+        if (!text.trim()) return await conn.reply(m.chat, '🎮 *⭐ Ingresa el nombre o enlace de la canción.* 🤖', m)
+
         const videoMatch = text.match(/(?:youtu\.be\/|youtube\.com\/(?:watch\?v=|embed\/|shorts\/|live\/|v\/))([a-zA-Z0-9_-]{11})/)
-        const query = videoMatch ? 'https://youtu.be/' + videoMatch[1] : text
+        const query = videoMatch? 'https://youtu.be/' + videoMatch[1] : text
         const search = await yts(query)
-        const result = videoMatch ? search.videos.find(v => v.videoId === videoMatch[1]) || search.all[0] : search.all[0]
-        if (!result) throw 'No se encontraron resultados.'
-        
+        const result = videoMatch? search.videos.find(v => v.videoId === videoMatch[1]) || search.all[0] : search.all[0]
+        if (!result) throw '🎮 ❌ No se encontraron resultados. 🕹️'
+
         const { title, thumbnail, timestamp, views, videoId, author, seconds } = result
-        if (seconds > 1800) throw 'El contenido supera el límite de duración (30 minutos).'
-        
+        if (seconds > 1800) throw '🎮 ❌ Error: El contenido supera el límite de 30 minutos. 🤖'
+
         const vistas = formatViews(views)
         const canal = author.name
         const shortUrl = `https://youtu.be/${videoId}`
 
-        const info = `📌 *Título:* ${title}
+        const info = `🎮 𓆩 𝗬𝗢𝗨𝗧𝗨𝗕𝗘 𝗠𝗨𝗦𝗜𝗖 𓆪 🤖
+
+📌 *Título:* ${title}
 👤 *Canal:* ${canal}
 👁️ *Vistas:* ${vistas}
 ⏱️ *Duración:* ${timestamp}
-🔗 *Enlace:* ${shortUrl}`
-        
+🔗 *Enlace:* ${shortUrl}
+
+> "Cargando soundtrack... Ready to play" 🕹️`
+
         const thumb = (await conn.getFile(thumbnail)).data
-        
+
         const [_, mediaUrl] = await Promise.all([
             conn.sendMessage(m.chat, { image: thumb, caption: info }, { quoted: m }),
             getMediaUrl(shortUrl)
         ])
-        
-        if (!mediaUrl) throw 'No se pudo obtener el audio.'
-        
-        await conn.sendMessage(m.chat, { 
-            audio: { url: mediaUrl }, 
-            fileName: `${title}.mp3`, 
-            mimetype: 'audio/mpeg' 
+
+        if (!mediaUrl) throw '🎮 ❌ No se pudo obtener el audio. 🕹️'
+
+        await conn.sendMessage(m.chat, {
+            audio: { url: mediaUrl },
+            fileName: `RickyBot_${title}.mp3`,
+            mimetype: 'audio/mpeg'
         }, { quoted: m })
-        
+
     } catch (e) {
-        return await conn.reply(m.chat, typeof e === 'string' ? e : 'Ocurrió un error: ' + e.message, m)
+        return await conn.reply(m.chat, typeof e === 'string'? e : `🎮 ❌ Error del sistema: ${e.message} 🤖`, m)
     }
 }
 
