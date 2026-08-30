@@ -5,12 +5,12 @@ import { fileTypeFromBuffer } from "file-type"
 let handler = async (m, { conn }) => {
   let q = m.quoted? m.quoted : m
   let mime = (q.msg || q).mimetype || ''
-  if (!mime) return conn.reply(m.chat, `🐱 *𝗚𝗔𝗥𝗙𝗜𝗘𝗟𝗗 𝗕𝗢𝗧 𝗢𝗙𝗜𝗖𝗜𝗔𝗟* 🐱
+  if (!mime) return conn.reply(m.chat, `🎮 *𝗥𝗜𝗖𝗞𝗬 𝗕𝗢𝗧 𝗢𝗙𝗜𝗖𝗜𝗔𝗟* 🤖
 
 *━━━━━━━━━━*
-*⚠️ ERROR DE USO ⚠️*
+*⚠️ 𝗘𝗥𝗢𝗥 𝗗𝗘 𝗨𝗦𝗢 ⚠️*
 
-*Instrucciones:*
+*𝗜𝗻𝘀𝘁𝗿𝘂𝗰𝗶𝗼𝗻𝗲𝘀:*
 *➤* Responde a una *imagen, video, audio o documento*
 *➤* Formatos: *Imagen | Video | Audio | Doc*
 
@@ -24,34 +24,34 @@ let handler = async (m, { conn }) => {
     let link = await myCloud(media)
     if (!link.url) throw new Error()
 
-    let txt = `🐱 *𝗚𝗔𝗥𝗙𝗜𝗘𝗟𝗗 𝗕𝗢𝗧 𝗢𝗙𝗜𝗖𝗜𝗔𝗟* 🐱
+    let txt = `🎮 *𝗥𝗜𝗖𝗞𝗬 𝗕𝗢𝗧 𝗢𝗙𝗜𝗖𝗜𝗔𝗟* 🤖
 
 *━━━━━━━━━━━━━━━━━━*
-*✅ ARCHIVO SUBIDO CORRECTAMENTE*
+*✅ 𝗔𝗥𝗖𝗛𝗜𝗩𝗢 𝗦𝗨𝗕𝗜𝗗𝗢 𝗖𝗢𝗥𝗥𝗘𝗖𝗧𝗔𝗠𝗘𝗡𝗧𝗘*
 
-*📊 DATOS DEL ARCHIVO*
+*📊 𝗗𝗔𝗧𝗢𝗦 𝗗𝗘𝗟 𝗔𝗥𝗖𝗛𝗜𝗩𝗢*
 *➤ Enlace:* ${link.url}
 *➤ ID:* ${link.id || 'N/A'}
 *➤ Peso:* ${formatBytes(media.length)}
 *➤ Servidor:* *evogb.win*
-*➤ Bot:* ***Garfield Bot Oficial***
+*➤ Bot:* ***Ricky Bot Oficial***
 
 *━━━━━━━━━━━━━━━━━━*
 *Owner:* @whois.yallico 
 *WhatsApp:* +51 927 174 369
-> _"Guardado en la nube por Garfield Bot"_ ☁️⚡`
+> _"Subido a la nube por Ricky Bot"_ ☁️⚡`
 
-    await conn.sendFile(m.chat, media, 'garfield.' + link.url.split('.').pop(), txt, m)
+    await conn.sendFile(m.chat, media, 'ricky.' + link.url.split('.').pop(), txt, m)
     await conn.sendMessage(m.chat, { react: { text: '✅', key: m.key } })
   } catch (e) {
     console.error(e)
     await conn.sendMessage(m.chat, { react: { text: '❌', key: m.key } })
-    await conn.reply(m.chat, `🐱 *𝗚𝗔𝗥𝗙𝗜𝗘𝗟𝗗 𝗕𝗢𝗧 𝗢𝗙𝗜𝗖𝗜𝗔𝗟* 🐱
+    await conn.reply(m.chat, `🎮 *𝗥𝗜𝗖𝗞𝗬 𝗕𝗢𝗧 𝗢𝗙𝗜𝗖𝗜𝗔𝗟* 🤖
 
 *━━━━━━━━━━*
-*❌ ERROR DE SUBIDA ❌*
+*❌ 𝗘𝗥𝗢𝗥 𝗗𝗘 𝗦𝗨𝗕𝗜𝗗𝗔 ❌*
 
-*Aviso:*
+*𝗔𝘃𝗶𝘀𝗼:*
 *➤* No se pudo subir el archivo
 *➤* Intenta con otro archivo
 
