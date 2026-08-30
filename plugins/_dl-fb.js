@@ -10,21 +10,21 @@ const handler = async (m, { args, conn }) => {
     if (!args[0]) {
       return conn.reply(
         m.chat,
-        `DESCARGADOR DE FACEBOOK
+        `🎮 𓆩 𝗗𝗘𝗦𝗖𝗔𝗥𝗚𝗔𝗗𝗢𝗥 𝗗𝗘 𝗙𝗔𝗖𝗘𝗕𝗢𝗞 𓆪 🤖
 
 Uso:.facebook <link de facebook>
-Ejemplo:.facebook https://www.facebook.com/watch?v=123`,
+Ejemplo:.facebook https://www.facebook.com/watch?v=123 🕹️`,
         m
       )
     }
 
     if (!args[0].match(/facebook\.com|fb\.watch/)) {
       await react(conn, m, '❌')
-      return m.reply('⚠️ El enlace no es válido de Facebook.')
+      return m.reply('🎮 ⚠️ Link inválido. Solo acepto links de Facebook. 🤖')
     }
 
     await react(conn, m, '⏳')
-    await m.reply('⏳ Procesando video...')
+    await m.reply('🎮 ⏳ Conectando al servidor... Descargando assets 🕹️')
 
     const api = `https://yosoyyo-api-ofc.onrender.com/api/facebook?url=${encodeURIComponent(args[0])}&apiKey=yosoyyo_sk_2nbk5m69`
     const res = await fetch(api)
@@ -42,26 +42,26 @@ Ejemplo:.facebook https://www.facebook.com/watch?v=123`,
       await react(conn, m, '❌')
       return conn.reply(
         m.chat,
-        '❌ No se pudo obtener el enlace de descarga del video.',
+        '🎮 ❌ Error 404: No se pudo obtener el enlace de descarga. 🤖',
         m
       )
     }
 
     const titulo = info.title || 'Video de Facebook'
-    const duracion = info.duration? `\n⏱️ DURACIÓN: ${info.duration}` : ''
-    const autorTxt = author.username? `\n👤 AUTOR: ${author.username}` : ''
+    const duracion = info.duration? `\n⏱️ 𝗗𝗨𝗥𝗔𝗖𝗜𝗢𝗡: ${info.duration}` : ''
+    const autorTxt = author.username? `\n👤 𝗔𝗨𝗧𝗢𝗥: ${author.username}` : ''
 
-    let txt = `╭─「 VIDEO DE FACEBOOK 」
+    let txt = `╭─「 𝗩𝗜𝗗𝗘𝗢 𝗗𝗘 𝗙𝗔𝗖𝗘𝗕𝗢𝗢𝗞 」
 │
-│ 📝 TÍTULO: ${titulo}${duracion}${autorTxt}
+│ 📝 𝗧𝗜𝗧𝗨𝗟𝗢: ${titulo}${duracion}${autorTxt}
 │
 ╰───────────────────────
-Descargando...`
+🎮 Descargando... Render sin marca de agua 🤖`
 
     await conn.sendFile(
       m.chat,
       videoUrl,
-      'facebook.mp4',
+      'RickyBot_facebook.mp4',
       txt,
       m
     )
@@ -71,7 +71,7 @@ Descargando...`
   } catch (error) {
     console.log('Facebook API Error:', error.message)
     await react(conn, m, '❌')
-    await m.reply(`❌ Error: ${error.message}`)
+    await m.reply(`🎮 ❌ Game Over: ${error.message} 🕹️`)
   }
 }
 
