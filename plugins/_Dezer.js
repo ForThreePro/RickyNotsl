@@ -13,11 +13,11 @@ let handler = async (m, { conn, prefix, command }) => {
     let q = m.quoted? m.quoted : m;
     let mime = (q.msg || q).mimetype || '';
 
-    if (!mime) return m.reply(`📸 Responde a una imagen con el comando *${prefix}${command}*`);
-    if (!mime.startsWith('image')) return m.reply(`⚠️ Solo se admiten imágenes.`);
+    if (!mime) return m.reply(`🎮 📸 Responde a una imagen con el comando *${prefix}${command}* 🕹️`);
+    if (!mime.startsWith('image')) return m.reply(`🤖 ⚠️ Solo se admiten imágenes. 🕹️`);
 
     await react(conn, m, "⚡");
-    await m.reply('⏳ Procesando imagen HD + Quitar fondo...')
+    await m.reply('🎮 ⏳ Procesando imagen HD + Quitar fondo... Cargando assets 🤖')
 
     const media = await q.download();
 
@@ -38,13 +38,14 @@ let handler = async (m, { conn, prefix, command }) => {
     if (!response.ok) throw new Error(`Error remove.bg: ${response.statusText}`)
     const resultBuffer = Buffer.from(await response.arrayBuffer())
 
-    const caption = `╭─「 PROCESADO CON IA 」
+    const caption = `╭─「 𝗣𝗥𝗢𝗖𝗘𝗦𝗔𝗗𝗢 𝗖𝗢𝗡 𝗜𝗔 」
 │
-│ ⚙️ PROCESO: HD + Quitar Fondo
-│ 🔝 CALIDAD: Alta
-│ 📦 FORMATO: PNG Sin Fondo
+│ ⚙️ 𝗣𝗥𝗢𝗖𝗘𝗦𝗢: HD + Quitar Fondo
+│ 🔝 𝗖𝗔𝗟𝗜𝗗𝗔𝗗: Alta
+│ 📦 𝗙𝗢𝗥𝗠𝗔𝗧𝗢: PNG Sin Fondo
 │
-╰───────────────────────`
+╰───────────────────────
+🎮 "Render completado. Texturas limpias" 🕹️`
 
     // 1. ENVIAR IMAGEN NORMAL PRIMERO
     await conn.sendMessage(m.chat, {
@@ -54,8 +55,8 @@ let handler = async (m, { conn, prefix, command }) => {
 
     // 2. PREGUNTAR SI QUIERE DOCUMENTO
     await conn.sendMessage(m.chat, {
-      text: `¿Deseas recibir esta imagen como DOCUMENTO sin compresión?`,
-      footer: 'Responde: si o no',
+      text: `🎮 ¿Deseas recibir esta imagen como DOCUMENTO sin compresión? 🤖`,
+      footer: 'Responde: si o no | Ricky Bot',
       buttons: [
         {
           buttonId: `.docsi_${m.sender}`,
@@ -80,7 +81,7 @@ let handler = async (m, { conn, prefix, command }) => {
   } catch (e) {
     console.error(e);
     await react(conn, m, "❌");
-    await m.reply(`❌ Ocurrió un error: ${e.message}`);
+    await m.reply(`🎮 ❌ Error en el sistema: ${e.message} 🕹️`);
   }
 };
 
@@ -92,13 +93,13 @@ handler.before = async (m, { conn }) => {
   if (buttonId?.startsWith('.docsi_')) {
     const sender = buttonId.split('_')[1]
     const buffer = global.resultadosHD?.[sender]
-    if (!buffer) return m.reply('❌ El proceso expiró. Vuelve a usar el comando.')
+    if (!buffer) return m.reply('🎮 ❌ El proceso expiró. Reinicia la partida. 🤖')
 
     await conn.sendMessage(m.chat, {
       document: buffer,
       mimetype: 'image/png',
-      fileName: `HD_NoBG_${Date.now()}.png`,
-      caption: '✅ DOCUMENTO ENVIADO SIN COMPRESIÓN'
+      fileName: `RickyBot_HD_NoBG_${Date.now()}.png`,
+      caption: '🎮 ✅ DOCUMENTO ENVIADO SIN COMPRESIÓN 🕹️'
     }, { quoted: m })
 
     delete global.resultadosHD[sender]
@@ -106,7 +107,7 @@ handler.before = async (m, { conn }) => {
 
   if (buttonId?.startsWith('.docno_')) {
     delete global.resultadosHD[m.sender]
-    await m.reply('👍 Entendido.')
+    await m.reply('🤖 Entendido. Volviendo al lobby. 🎮')
   }
 }
 
@@ -125,7 +126,7 @@ async function ihancer(buffer, { method = 1, size = 'low' } = {}) {
 
     const { data } = await axios.post('https://ihancer.com/api/enhance', form, {
         headers: {
-         ...form.getHeaders(),
+       ...form.getHeaders(),
             'accept-encoding': 'gzip',
             'host': 'ihancer.com',
             'user-agent': 'Dart/3.5 (dart:io)'
@@ -137,7 +138,7 @@ async function ihancer(buffer, { method = 1, size = 'low' } = {}) {
 
 handler.help = ['removebg', 'rbg'];
 handler.tags = ['tools'];
-handler.command = ['removebg', 'rbg']; // <-- AQUI ESTAN LOS 2 COMANDOS
+handler.command = ['removebg', 'rbg'];
 handler.limit = true;
 
 export default handler;
