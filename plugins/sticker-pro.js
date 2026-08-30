@@ -15,8 +15,8 @@ let handler = async (m, { conn, text, usedPrefix, command, args }) => {
         if (!img) return error('Responde a un *sticker*')
 
         try {
-            let stiker = await addExif(img, packname || '***Garfield Bot Oficial***', author || '')
-            await conn.sendFile(m.chat, stiker, 'garfield.webp', '', m)
+            let stiker = await addExif(img, packname || '***Ricky Bot Oficial***', author || '')
+            await conn.sendFile(m.chat, stiker, 'ricky.webp', '', m)
             await m.react('✅')
         } catch (e) {
             console.error(e)
@@ -31,8 +31,8 @@ let handler = async (m, { conn, text, usedPrefix, command, args }) => {
         let mime = (q.msg || q).mimetype || q.mediaType || ''
         if (!/webp|image|video/g.test(mime)) return error('Responde a una *imagen, video o gif*')
         let img = await q.download()
-        let stiker = await sticker(img, false, '***Garfield Bot Oficial***', '')
-        await conn.sendFile(m.chat, stiker, 'garfield.webp', '', m)
+        let stiker = await sticker(img, false, '***Ricky Bot Oficial***', '🎮 Gamer Pack')
+        await conn.sendFile(m.chat, stiker, 'ricky.webp', '', m)
         await m.react('✅')
     }
 
@@ -86,10 +86,10 @@ let handler = async (m, { conn, text, usedPrefix, command, args }) => {
         try {
             const json = await axios.post('https://btzqc.betabotz.eu.org/generate', obj, { headers: { 'Content-Type': 'application/json' }})
             const buffer = Buffer.from(json.data.result.image, 'base64')
-            const stiker = await sticker(buffer, false, '***Garfield Bot Oficial***', '')
+            const stiker = await sticker(buffer, false, '***Ricky Bot Oficial***', '🎮 Gamer Pack')
 
             if (stiker) {
-                await conn.sendFile(m.chat, stiker, 'garfieldqc.webp', '', m)
+                await conn.sendFile(m.chat, stiker, 'rickyqc.webp', '', m)
                 await m.react('✅')
             } else {
                 await m.react('❌')
@@ -117,16 +117,16 @@ let handler = async (m, { conn, text, usedPrefix, command, args }) => {
     }
 
     function error(msg) {
-        let texto = `🐱 *𝗚𝗔𝗥𝗙𝗜𝗘𝗟𝗗 𝗕𝗢𝗧 𝗢𝗙𝗜𝗖𝗜𝗔𝗟 - 𝗦𝗧𝗜𝗖𝗞𝗘𝗥𝗦* 🐱
+        let texto = `🎮 *𝗥𝗜𝗖𝗞𝗬 𝗕𝗢𝗧 𝗢𝗙𝗜𝗖𝗜𝗔𝗟 - 𝗦𝗧𝗜𝗖𝗞𝗘𝗥𝗦* 🤖
 
 *━━━━━━━━━━*
-*❌ ERROR*
+*❌ 𝗘𝗥𝗢𝗥*
 
 *➤* ${msg}
 
 *━━━━━━━━━━*
 *Owner:* @whois.yallico
-> _"Algo salió mal"_ 💥`
+> _"Game Over"_ 💥`
         m.reply(texto)
     }
 }
