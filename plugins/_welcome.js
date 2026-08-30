@@ -1,18 +1,18 @@
 import { WAMessageStubType } from '@whiskeysockets/baileys'
 
 const handler = async (m, { conn, args, isAdmin, isOwner }) => {
-  if (!isAdmin &&!isOwner) return conn.reply(m.chat, `🐱 𓆩 ***𝗚𝗔𝗥𝗙𝗜𝗘𝗟𝗗 𝗢𝗙𝗜𝗖𝗜𝗔𝗟*** 𓆪 🐱\n\n🍕 *Solo admins pueden usar este comando*`, m)
+  if (!isAdmin &&!isOwner) return conn.reply(m.chat, `🎮 𓆩 ***𝗥𝗜𝗖𝗞𝗬 𝗕𝗢𝗧 𝗢𝗙𝗜𝗖𝗜𝗔𝗟*** 𓆪 🤖\n\n🕹️ *Solo admins pueden usar este comando*`, m)
   let chat = global.db.data.chats[m.chat]
   if (!chat) global.db.data.chats[m.chat] = {}
 
   if (/on/i.test(args[0])) {
     chat.bienvenida = true
-    await conn.reply(m.chat, `😼 𓆩 ***𝗕𝗜𝗘𝗡𝗩𝗘𝗡𝗜𝗗𝗔*** 𓆪 😼\n\n🟢 *Activada con audios*`, m)
+    await conn.reply(m.chat, `🎮 𓆩 ***𝗦𝗜𝗦𝗧𝗘𝗠𝗔 𝗔𝗖𝗧𝗜𝗩𝗔𝗗𝗢*** 𓆪 🤖\n\n🟢 *Bienvenida con audios activada*`, m)
   } else if (/off/i.test(args[0])) {
     chat.bienvenida = false
-    await conn.reply(m.chat, `😼 𓆩 ***𝗕𝗜𝗘𝗡𝗩𝗘𝗡𝗜𝗗𝗔*** 𓆪 😼\n\n🔴 *Desactivada*`, m)
+    await conn.reply(m.chat, `🎮 𓆩 ***𝗦𝗜𝗦𝗧𝗘𝗠𝗔 𝗗𝗘𝗦𝗔𝗖𝗧𝗜𝗩𝗔𝗗𝗢*** 𓆪 🤖\n\n🔴 *Bienvenida desactivada*`, m)
   } else {
-    await conn.reply(m.chat, `🐱 𓆩 ***𝗚𝗔𝗥𝗙𝗜𝗘𝗟𝗗 𝗢𝗙𝗜𝗖𝗜𝗔𝗟*** 𓆪 🐱\n\n📌 *Uso:* ${m.prefix}bienvenida on/off`, m)
+    await conn.reply(m.chat, `🎮 𓆩 ***𝗥𝗜𝗖𝗞𝗬 𝗕𝗢𝗧 𝗢𝗙𝗜𝗖𝗜𝗔𝗟*** 𓆪 🤖\n\n📌 *Uso:* ${m.prefix}bienvenida on/off\n> "Activa los mensajes de entrada al lobby" 🕹️`, m)
   }
 }
 
@@ -35,7 +35,7 @@ handler.before = async function (m, { conn, groupMetadata }) {
     try {
       pp = await conn.profilePictureUrl(userJid, 'image')
     } catch {
-      pp = 'https://files.evogb.win/E2yVdA.jpg' // URL GARFIELD FALLBACK
+      pp = 'https://files.evogb.win/1FbQzR.jpg' // URL RICKY FALLBACK GAMER
     }
 
     const userTag = `@${userJid.split('@')[0]}`
@@ -49,19 +49,19 @@ handler.before = async function (m, { conn, groupMetadata }) {
       case WAMessageStubType.GROUP_PARTICIPANT_ADD:
         audio = chat.audiowelcome
         txt = chat.customWelcome? chat.customWelcome.replace(/@user/gi, userTag).replace(/@group/gi, groupName).replace(/@desc/gi, groupDesc) :
-`😼 𓆩 ***𝗡𝗨𝗘𝗩𝗢 𝗚𝗔𝗧𝗜𝗧𝗢*** 𓆪 😼\n\n🐱 *${userTag}* llegó a *${groupName}*\n🍕 *Miembro N°:* ${membersCount}`
+`🎮 𓆩 ***𝗡𝗨𝗘𝗩𝗢 𝗣𝗟𝗔𝗬𝗘𝗥*** 𓆪 🤖\n\n🕹️ *${userTag}* se unió a *${groupName}*\n👥 *Miembros:* ${membersCount}\n> "Player 1 listo para jugar"`
         break
 
       case WAMessageStubType.GROUP_PARTICIPANT_LEAVE:
         audio = chat.audiobye
         txt = chat.customBye? chat.customBye.replace(/@user/gi, userTag).replace(/@group/gi, groupName) :
-`😾 𓆩 ***𝗦𝗘 𝗙𝗨𝗘 𝗗𝗘𝗟 𝗦𝗢𝗙𝗔*** 𓆪 😾\n\n💤 *${userTag}* se durmió fuera de *${groupName}*\n📉 *Quedamos:* ${membersCount}`
+`🎮 𓆩 ***𝗣𝗟𝗔𝗬𝗘𝗥 𝗗𝗘𝗦𝗖𝗢𝗡𝗘𝗖𝗧𝗔𝗗𝗢*** 𓆪 🤖\n\n💤 *${userTag}* salió de *${groupName}*\n👥 *Quedan:* ${membersCount}`
         break
 
       case WAMessageStubType.GROUP_PARTICIPANT_REMOVE:
         audio = chat.audiokick
         txt = chat.customKick? chat.customKick.replace(/@user/gi, userTag).replace(/@group/gi, groupName) :
-`🙀 𓆩 ***𝗘𝗫𝗣𝗨𝗟𝗦𝗔𝗗𝗢*** 𓆪 🙀\n\n🥊 *${userTag}* fue pateado de *${groupName}*`
+`🎮 𓆩 ***𝗕𝗔𝗡𝗘𝗔𝗗𝗢 𝗗𝗘𝗟 𝗦𝗘𝗥𝗩𝗜𝗗𝗢𝗥*** 𓆪 🤖\n\n🥊 *${userTag}* fue expulsado de *${groupName}*`
         break
     }
 
@@ -81,7 +81,7 @@ handler.before = async function (m, { conn, groupMetadata }) {
       }
     }
   } catch (e) {
-    console.error("Error en Bienvenida Audio:", e)
+    console.error("Error en Bienvenida RickyBot:", e)
   }
   return!0
 }
