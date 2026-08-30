@@ -5,12 +5,12 @@ const react = async (conn, m, text) => {
 
 let handler = async (m, { conn, args }) => {
   try {
-    await react(conn, m, "👤")
+    await react(conn, m, "🎮")
 
     // Si menciona a alguien usa esa persona, si no usa al que escribió
     let who = m.mentionedJid && m.mentionedJid[0]? m.mentionedJid[0] : m.sender
 
-    // Obtener datos del usuario de la DB
+    // Obtener datos del player de la DB
     let user = global.db.data.users[who] || {}
 
     // Datos por defecto si no existen
@@ -21,33 +21,41 @@ let handler = async (m, { conn, args }) => {
     let money = user.money || 0
     let limit = user.limit || 0
     let registered = user.registered || false
-    let role = user.role || 'Principiante'
+    let role = user.role || 'Noob'
 
     // Calcular XP para el siguiente nivel
     let reqXp = (level + 1) * 100
     let xpProgress = exp - (level * 100)
 
-    const caption = `╭─「 PERFIL DE USUARIO 」
-│
-│ 👤 *NOMBRE:* ${name}
-│ 📱 *NUMERO:* @${number}
-│ 🏷️ *RANGO:* ${role}
-│
-│ 📊 *NIVEL:* ${level}
-│ ⭐ *EXP:* ${xpProgress}/${reqXp}
-│ 💰 *DINERO:* $${money}
-│ 💎 *DIAMANTES:* ${limit}
-│
-│ ✅ *REGISTRO:* ${registered? 'Si' : 'No'}
-│
-╰───────────────────────`
+    const caption = `🎮 𓆩 𝗣𝗘𝗥𝗙𝗜𝗟 𝗗𝗘 𝗣𝗟𝗔𝗬𝗘𝗥 𓆪 🤖
+
+.⃟𖥔 ݁. 𖦹˙— \`\`𝗘𝗦𝗧𝗔𝗗𝗜𝗦𝗧𝗜𝗖𝗔𝗦\`\` —˙𖦹.🕹️꒷
+
+ *⤷ ┇ 𝗜𝗡𝗙𝗢 𝗕𝗔𝗦𝗜𝗖𝗔* ：✿ 。
+
+──🎮 *𝗣𝗘𝗥𝗙𝗜𝗟* ╏ 💚
+💚 ➛ *Nombre:* ${name}
+💚 ➛ *Numero:* @${number}
+💚 ➛ *Rango:* ${role}
+
+──🤖 *𝗘𝗦𝗧𝗔𝗗𝗢* ╏ 🕹️
+🕹️ ➛ *Nivel:* ${level}
+🕹️ ➛ *XP:* ${xpProgress}/${reqXp}
+🕹️ ➛ *Monedas:* $${money}
+🕹️ ➛ *Diamantes:* ${limit}
+
+──⚡ *𝗥𝗘𝗚𝗜𝗦𝗧𝗥𝗢* ╏ ⚡
+⚡ ➛ *Estado:* ${registered? 'Registrado ✅' : 'No registrado ❌'}
+
+━━━━━━━━━━━
+*Powered by*: ***Ricky Bot Oficial*** 🎮`
 
     // Obtener foto de perfil
     let pp
     try {
       pp = await conn.profilePictureUrl(who, 'image')
     } catch {
-      pp = 'https://i.ibb.co/1p9Q0V3/default.jpg' // imagen por defecto
+      pp = 'https://files.evogb.win/1FbQzR.jpg' // imagen por defecto gamer
     }
 
     await conn.sendMessage(m.chat, {
@@ -61,7 +69,7 @@ let handler = async (m, { conn, args }) => {
   } catch (e) {
     console.error(e)
     await react(conn, m, "❌")
-    await m.reply(`❌ Ocurrió un error al obtener el perfil.`)
+    await m.reply(`🎮 ❌ Ocurrió un error al obtener el perfil. 🤖`)
   }
 }
 
