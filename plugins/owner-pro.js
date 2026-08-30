@@ -6,12 +6,12 @@ let handler = async (m, { conn, command }) => {
     // 1. RESET
     if (command === 'reset') {
         await m.react('🔄')
-        await m.reply(`🐱 *𝗚𝗔𝗥𝗙𝗜𝗘𝗟𝗗 𝗕𝗢𝗧 𝗢𝗙𝗜𝗖𝗜𝗔𝗟 - 𝗥𝗘𝗦𝗘𝗧* 🐱
+        await m.reply(`🎮 *𝗥𝗜𝗖𝗞𝗬 𝗕𝗢𝗧 𝗢𝗙𝗜𝗖𝗜𝗔𝗟 - 𝗥𝗘𝗦𝗘𝗧* 🤖
 
 *━━━━━━━━━━*
-*🔄 REINICIANDO SISTEMA*
+*🔄 𝗥𝗘𝗜𝗡𝗜𝗖𝗜𝗔𝗡𝗗𝗢 𝗦𝗜𝗦𝗧𝗘𝗠𝗔*
 
-> _Por favor espera unos segundos..._
+> _Reiniciando el lobby... espera unos segundos_
 
 *━━━━━━━━━━*`)
         process.send('reset')
@@ -22,20 +22,20 @@ let handler = async (m, { conn, command }) => {
         try {
             await m.react('👑')
             await conn.groupParticipantsUpdate(m.chat, [conn.user.jid], 'promote')
-            await m.reply(`🐱 *𝗚𝗔𝗥𝗙𝗜𝗘𝗟𝗗 𝗕𝗢𝗧 𝗢𝗙𝗜𝗖𝗜𝗔𝗟 - 𝗔𝗗𝗠𝗜𝗡* 🐱
+            await m.reply(`🎮 *𝗥𝗜𝗖𝗞𝗬 𝗕𝗢𝗧 𝗢𝗙𝗜𝗖𝗜𝗔𝗟 - 𝗔𝗗𝗠𝗜𝗡* 🤖
 
 *━━━━━━━━━━*
-*✅ ADMINISTRADOR ASIGNADO*
+*✅ 𝗔𝗗𝗠𝗜𝗡 𝗔𝗦𝗜𝗚𝗡𝗔𝗗𝗢*
 
-*➤* Ya tengo poderes de *admin* en este grupo
+*➤* Ya tengo poderes de *admin* en este lobby
 
 *━━━━━━━━━━*`)
         } catch (e) {
             await m.react('❌')
-            m.reply(`🐱 *𝗚𝗔𝗥𝗙𝗜𝗘𝗟𝗗 𝗕𝗢𝗧 𝗢𝗙𝗜𝗖𝗜𝗔𝗟* 🐱
+            m.reply(`🎮 *𝗥𝗜𝗖𝗞𝗬 𝗕𝗢𝗧 𝗢𝗙𝗜𝗖𝗜𝗔𝗟* 🤖
 
 *━━━━━━━━━━*
-*❌ ERROR*
+*❌ 𝗘𝗥𝗥𝗢𝗥*
 
 *➤* No pude asignarme *admin*
 *➤* Revisa que ya no sea admin o que tengas permisos
@@ -48,22 +48,22 @@ let handler = async (m, { conn, command }) => {
     if (command === 'update' || command === 'actualizar' || command === 'fix') {
         if (m.react) await m.react('🌀')
 
-        await conn.reply(m.chat, `🐱 *𝗚𝗔𝗥𝗙𝗜𝗘𝗟𝗗 𝗕𝗢𝗧 𝗢𝗙𝗜𝗖𝗜𝗔𝗟 - 𝗨𝗣𝗗𝗔𝗧𝗘* 🐱
+        await conn.reply(m.chat, `🎮 *𝗥𝗜𝗖𝗞𝗬 𝗕𝗢𝗧 𝗢𝗙𝗜𝗖𝗜𝗔𝗟 - 𝗨𝗣𝗗𝗔𝗧𝗘* 🤖
 
 *━━━━━━━━━━*
-*🌀 ACTUALIZANDO MODULOS*
+*🌀 𝗔𝗖𝗧𝗨𝗔𝗟𝗜𝗭𝗔𝗡𝗗𝗢 𝗠𝗢𝗗𝗨𝗟𝗢𝗦*
 
-> _Obteniendo cambios del repositorio..._
+> _Obteniendo parches del repositorio..._
 
 *━━━━━━━━━━*`, m)
 
         exec('git pull', async (err, stdout, stderr) => {
             if (err) {
                 if (m.react) await m.react('❌')
-                return conn.reply(m.chat, `🐱 *𝗚𝗔𝗥𝗙𝗜𝗘𝗟𝗗 𝗕𝗢𝗧 𝗢𝗙𝗜𝗖𝗜𝗔𝗟* 🐱
+                return conn.reply(m.chat, `🎮 *𝗥𝗜𝗖𝗞𝗬 𝗕𝗢𝗧 𝗢𝗙𝗜𝗖𝗜𝗔𝗟* 🤖
 
 *━━━━━━━━━━*
-*❌ ERROR EN LA ACTUALIZACION*
+*❌ 𝗘𝗥𝗥𝗢𝗥 𝗘𝗡 𝗟𝗔 𝗔𝗖𝗧𝗨𝗔𝗟𝗜𝗭𝗔𝗖𝗜𝗢𝗡*
 
 *➤* Detalle: 
 \`\`${err.message}\`\`
@@ -74,10 +74,10 @@ let handler = async (m, { conn, command }) => {
 
             if (stdout.includes('Already up to date.')) {
                 if (m.react) await m.react('✅')
-                return conn.reply(m.chat, `🐱 *𝗚𝗔𝗥𝗙𝗜𝗘𝗟𝗗 𝗕𝗢𝗧 𝗢𝗙𝗜𝗖𝗜𝗔𝗟* 🐱
+                return conn.reply(m.chat, `🎮 *𝗥𝗜𝗖𝗞𝗬 𝗕𝗢𝗧 𝗢𝗙𝗜𝗖𝗜𝗔𝗟* 🤖
 
 *━━━━━━━━━━*
-*✅ SISTEMA ACTUALIZADO*
+*✅ 𝗦𝗜𝗦𝗧𝗘𝗠𝗔 𝗔𝗖𝗧𝗨𝗔𝗟𝗜𝗭𝗔𝗗𝗢*
 
 *➤* El sistema ya está en su *versión más reciente*
 
@@ -86,12 +86,12 @@ let handler = async (m, { conn, command }) => {
             }
 
             if (m.react) await m.react('✅')
-            return conn.reply(m.chat, `🐱 *𝗚𝗔𝗥𝗙𝗜𝗘𝗟𝗗 𝗕𝗢𝗧 𝗢𝗙𝗜𝗖𝗜𝗔𝗟* 🐱
+            return conn.reply(m.chat, `🎮 *𝗥𝗜𝗖𝗞𝗬 𝗕𝗢𝗧 𝗢𝗙𝗜𝗖𝗜𝗔𝗟* 🤖
 
 *━━━━━━━━━━*
-*✅ ACTUALIZACION APLICADA*
+*✅ 𝗔𝗖𝗧𝗨𝗔𝗟𝗜𝗭𝗔𝗖𝗜𝗢𝗡 𝗔𝗣𝗟𝗜𝗖𝗔𝗗𝗔*
 
-*📋 Cambios:*
+*📋 Parches:*
 \`\`${stdout}\`\`
 
 *━━━━━━━━━━*
