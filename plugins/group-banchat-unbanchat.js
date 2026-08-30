@@ -4,40 +4,40 @@ let handler = async (m, { conn, isOwner, isROwner, command }) => {
   let type = command.toLowerCase()
 
   if (!(isOwner || isROwner)) {
-    return conn.reply(m.chat, `🐱 𓆩 ***𝗚𝗔𝗥𝗙𝗜𝗘𝗟𝗗 𝗕𝗢𝗧 𝗢𝗙𝗜𝗖𝗜𝗔𝗟*** 𓆪 🐱\n\n🍕 *Solo owners pueden usar este comando*`, m)
+    return conn.reply(m.chat, `🎮 𓆩 ***𝗥𝗜𝗖𝗞𝗬 𝗕𝗢𝗧 𝗢𝗙𝗜𝗖𝗜𝗔𝗟*** 𓆪 🤖\n\n🕹️ *Solo owners pueden usar este comando*`, m)
   }
 
   switch (type) {
     case 'banchat': case 'banearchat':
-      if (chat.isBanned) return m.reply(`🐱 𓆩 ***𝗚𝗔𝗥𝗙𝗜𝗘𝗟𝗗 𝗕𝗢𝗧 𝗢𝗙𝗜𝗖𝗜𝗔𝗟*** 𓆪 🐱\n\n🍕 *Este chat ya se encuentra baneado.*`)
+      if (chat.isBanned) return m.reply(`🎮 𓆩 ***𝗥𝗜𝗖𝗞𝗬 𝗕𝗢𝗧 𝗢𝗙𝗜𝗖𝗜𝗔𝗟*** 𓆪 🤖\n\n⚠️ *Este lobby ya se encuentra baneado.*`)
       chat.isBanned = true
-      await conn.reply(m.chat, `🐱 𓆩 𝗖𝗛𝗔𝗧 𝗕𝗔𝗡𝗘𝗔𝗗𝗢 𓆪 🐱
+      await conn.reply(m.chat, `🎮 𓆩 𝗟𝗢𝗕𝗕𝗬 𝗕𝗔𝗡𝗘𝗔𝗗𝗢 𓆪 🤖
 
-.⃟𖥔 ݁. 𖦹˙— \`\`BAN\`\` —˙𖦹.🍕꒷
+.⃟𖥔 ݁. 𖦹˙— \`\`𝗕𝗔𝗡\`\` —˙𖦹.🕹️꒷
 
-🚫 *El bot ha sido desactivado en este grupo*
+🚫 *El bot ha sido desactivado en este lobby*
 💤 *No responderé a ningún comando hasta que sea desbloqueado*
 
 👑 *Por:* @${m.sender.split('@')[0]}
 
 ━━━━━━━━━━━
-*Powered by*: ***Garfield Bot Oficial*** 🍕`, m, { mentions: [m.sender] })
+*Powered by*: ***Ricky Bot Oficial*** 🎮`, m, { mentions: [m.sender] })
       break
 
     case 'unbanchat': case 'desbanearchat':
-      if (!chat.isBanned) return m.reply(`🐱 𓆩 ***𝗚𝗔𝗥𝗙𝗜𝗘𝗟𝗗 𝗕𝗢𝗧 𝗢𝗙𝗜𝗖𝗜𝗔𝗟*** 𓆪 🐱\n\n🍕 *Este chat no está baneado.*`)
+      if (!chat.isBanned) return m.reply(`🎮 𓆩 ***𝗥𝗜𝗖𝗞𝗬 𝗕𝗢𝗧 𝗢𝗙𝗜𝗖𝗜𝗔𝗟*** 𓆪 🤖\n\n✅ *Este lobby no está baneado.*`)
       chat.isBanned = false
-      await conn.reply(m.chat, `🐱 𓆩 𝗖𝗛𝗔𝗧 𝗗𝗘𝗦𝗕𝗔𝗡𝗘𝗔𝗗𝗢 𓆪 🐱
+      await conn.reply(m.chat, `🎮 𓆩 𝗟𝗢𝗕𝗕𝗬 𝗗𝗘𝗦𝗕𝗔𝗡𝗘𝗔𝗗𝗢 𓆪 🤖
 
-.⃟𖥔 ݁. 𖦹˙— \`\`UNBAN\`\` —˙𖦹.🍕꒷
+.⃟𖥔 ݁. 𖦹˙— \`\`𝗨𝗡𝗕𝗔𝗡\`\` —˙𖦹.🕹️꒷
 
-😼 *El bot vuelve a estar activo en este grupo*
-🍕 *Ya pueden utilizar todos los comandos con normalidad*
+🟢 *El bot vuelve a estar activo en este lobby*
+🎮 *Ya pueden utilizar todos los comandos con normalidad*
 
 👑 *Por:* @${m.sender.split('@')[0]}
 
 ━━━━━━━━━━━
-*Powered by*: ***Garfield Bot Oficial*** 🍕`, m, { mentions: [m.sender] })
+*Powered by*: ***Ricky Bot Oficial*** 🎮`, m, { mentions: [m.sender] })
       break
 
     default:
