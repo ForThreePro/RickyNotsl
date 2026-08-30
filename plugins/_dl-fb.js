@@ -10,7 +10,7 @@ const handler = async (m, { args, conn }) => {
     if (!args[0]) {
       return conn.reply(
         m.chat,
-        `🎮 𓆩 𝗗𝗘𝗦𝗖𝗔𝗥𝗚𝗔𝗗𝗢𝗥 𝗗𝗘 𝗙𝗔𝗖𝗘𝗕𝗢𝗞 𓆪 🤖
+        `🎮 𓆩 𝗗𝗘𝗦𝗖𝗔𝗥𝗚𝗔𝗗𝗢𝗥 𝗗𝗘 𝗙𝗔𝗖𝗘𝗕𝗢𝗢𝗞 𓆪 🤖
 
 Uso:.facebook <link de facebook>
 Ejemplo:.facebook https://www.facebook.com/watch?v=123 🕹️`,
