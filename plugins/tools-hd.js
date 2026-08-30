@@ -6,7 +6,7 @@ let handler = async (m, { conn, prefix, command }) => {
     let q = m.quoted ? m.quoted : m;
     let mime = (q.msg || q).mimetype || '';
 
-    if (!mime) return m.reply(`📸 Responde a una imagen con el comando *${prefix}${command}* para mejorar su calidad.`);
+    if (!mime) return m.reply(`🎮 Responde a una imagen con el comando *${prefix}${command}* para mejorar su calidad.`);
     if (!mime.startsWith('image')) return m.reply(`⚠️ Solo se admiten imágenes.`);
 
     // Reacción de procesamiento (Rayo)
@@ -19,14 +19,19 @@ let handler = async (m, { conn, prefix, command }) => {
     // Procesamiento con IA
     const enhancedBuffer = await ihancer(media, { method: 1, size: 'high' });
 
-    const caption = `╭╾━━━━╼ 〔 ⚡ 〕 ╾━━━━╼╮
-┃  ✨ *GARFIEL BOT*
-┃
-┃ ⚙️ *Método:* iHancer AI
-┃ 🔝 *Calidad:* High Max
-┃ 🔥 *By:* Whois Developers
-╰╾━━━━╼ 〔 🚀 〕 ╾━━━━╼╯
-*Power & Speed Style*`;
+    const caption = `🎮 𓆩 𝗠𝗘𝗝𝗢𝗥𝗔 𝗖𝗢𝗡 𝗜𝗔 𓆪 🤖
+.⃟𖥔 ݁. 𖦹˙— \`\`𝗛𝗗 𝗘𝗡𝗛𝗔𝗡𝗖𝗘𝗥\`\` —˙𖦹.🕹️꒷
+
+ *⤷ ┇ 𝗜𝗡𝗙𝗢𝗥𝗠𝗔𝗖𝗜𝗢𝗡* ：✿ 。
+
+──🎮 *𝗗𝗘𝗧𝗔𝗟𝗟𝗘𝗦* ╏ 💚
+💚 ➛ *Método:* iHancer AI
+💚 ➛ *Calidad:* High Max
+💚 ➛ *By:* Ricky Developers
+
+━━━━━━━━━━━
+*Powered by*: ***Ricky Bot Oficial*** 🎮
+> *"Gráficos en 4K, lag cero"* ⚡`;
 
     await conn.sendMessage(m.chat, {
       image: enhancedBuffer,
@@ -43,7 +48,7 @@ let handler = async (m, { conn, prefix, command }) => {
     await conn.sendMessage(m.chat, {
       react: { text: "❌", key: m.key }
     });
-    await m.reply("⚠️ Ocurrió un error al procesar la imagen con la IA.");
+    await m.reply("🎮 ⚠️ Ocurrió un error al procesar la imagen con la IA. 🤖");
   }
 };
 
@@ -59,7 +64,7 @@ async function ihancer(buffer, { method = 1, size = 'low' } = {}) {
     form.append('is_pro_version', 'false')
     form.append('is_enhancing_more', 'false')
     form.append('max_image_size', size)
-    form.append('file', buffer, `didier_${Date.now()}.jpg`) // Nombre de archivo actualizado
+    form.append('file', buffer, `ricky_${Date.now()}.jpg`) // Nombre de archivo actualizado
 
     const { data } = await axios.post('https://ihancer.com/api/enhance', form, {
         headers: {
