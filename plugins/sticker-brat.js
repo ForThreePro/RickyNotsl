@@ -8,13 +8,13 @@ let handler = async (m, { conn, text, usedPrefix, command }) => {
   let q = m.quoted ? m.quoted : m
   let txt = text || q.text || q.caption || q.body || ''
 
-  if (!txt) return m.reply(`🐱 *𝗚𝗔𝗥𝗙𝗜𝗘𝗟𝗗 𝗕𝗢𝗧 𝗢𝗙𝗜𝗖𝗜𝗔𝗟 - 𝗕𝗥𝗔𝗧* 🐱
+  if (!txt) return m.reply(`🎮 *𝗥𝗜𝗖𝗞𝗬 𝗕𝗢𝗧 𝗢𝗙𝗜𝗖𝗜𝗔𝗟 - 𝗕𝗥𝗔𝗧* 🤖
 
 *━━━━━━━━━━*
-*⚠️ ERROR DE USO*
+*⚠️ 𝗘𝗥𝗥𝗢𝗥 𝗗𝗘 𝗨𝗦𝗢*
 
 *➤* Escribe el texto para generar el *sticker Brat*
-*➤* Ejemplo: *${usedPrefix + command} Hola Garfield*
+*➤* Ejemplo: *${usedPrefix + command} Hola Ricky*
 
 *━━━━━━━━━━*`)
 
@@ -26,10 +26,10 @@ let handler = async (m, { conn, text, usedPrefix, command }) => {
   let response = await fetch(apiUrl)
   if (!response.ok) {
     await m.react('❌')
-    return m.reply(`🐱 *𝗚𝗔𝗥𝗙𝗜𝗘𝗟𝗗 𝗕𝗢𝗧 𝗢𝗙𝗜𝗖𝗜𝗔𝗟* 🐱
+    return m.reply(`🎮 *𝗥𝗜𝗖𝗞𝗬 𝗕𝗢𝗧 𝗢𝗙𝗜𝗖𝗜𝗔𝗟* 🤖
 
 *━━━━━━━━━━*
-*❌ ERROR*
+*❌ 𝗘𝗥𝗢𝗥*
 
 *➤* Error al generar el *sticker*
 *➤* Intenta de nuevo
@@ -39,8 +39,8 @@ let handler = async (m, { conn, text, usedPrefix, command }) => {
 
   let inputBuffer = await response.buffer()
   let ext = isAnimated ? 'mp4' : 'png'
-  let tmpInput = path.join(tmpdir(), `garfield-${Date.now()}.${ext}`)
-  let tmpOutput = path.join(tmpdir(), `garfield-${Date.now()}.webp`)
+  let tmpInput = path.join(tmpdir(), `ricky-${Date.now()}.${ext}`)
+  let tmpOutput = path.join(tmpdir(), `ricky-${Date.now()}.webp`)
 
   fs.writeFileSync(tmpInput, inputBuffer)
 
@@ -67,8 +67,8 @@ let handler = async (m, { conn, text, usedPrefix, command }) => {
 
   await conn.sendMessage(m.chat, {
     sticker: stickerBuffer,
-    packname: '***Garfield Bot Oficial***',
-    author: ''
+    packname: '***Ricky Bot Oficial***',
+    author: '🎮 Gamer Pack'
   }, { quoted: m })
 
   if (fs.existsSync(tmpInput)) fs.unlinkSync(tmpInput)
@@ -77,8 +77,8 @@ let handler = async (m, { conn, text, usedPrefix, command }) => {
   await m.react('✅')
 }
 
-handler.help = ['brat <texto>']
+handler.help = ['brat <texto>', 'brat2 <texto>', 'bratanim <texto>']
 handler.tags = ['sticker']
-handler.command = /^brat?$/i
+handler.command = /^(brat|brat2|bratanim)$/i
 
 export default handler
