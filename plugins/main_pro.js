@@ -29,11 +29,8 @@ let handler = async (m, { conn, command, text, usedPrefix }) => {
 *Powered by*: ***Ricky Bot Oficial*** 🎮
 > *"Ricky está disponible para jugar"* ⚡`
 
-        // Rota las 2 fotos
-        const images = [
-           'https://files.evogb.win/1FbQzR.jpg'
-        ]
-        let img = { url: images[Math.floor(Math.random() * images.length)] }
+        // IMAGEN GLOBAL
+        let img = { url: global.botimg }
 
         await m.react('✅')
         return conn.sendMessage(m.chat, {
@@ -67,10 +64,8 @@ let handler = async (m, { conn, command, text, usedPrefix }) => {
 *Powered by*: ***Ricky Bot Oficial*** 🎮
 > *"Respondo más rápido que un headshot"* ⚡`
 
-        const images = [
-            'https://files.evogb.win/1FbQzR.jpg'
-        ]
-        let img = { url: images[Math.floor(Math.random() * images.length)] }
+        // IMAGEN GLOBAL
+        let img = { url: global.botimg }
 
         await m.react('✅')
         return conn.sendMessage(m.chat, {
@@ -210,7 +205,7 @@ let handler = async (m, { conn, command, text, usedPrefix }) => {
             let texto = `
 🎮 *𓆩 ***𝗥𝗜𝗖𝗞𝗬 𝗕𝗢𝗧 𝗢𝗙𝗜𝗖𝗜𝗔𝗟*** 𓆪* 🤖
 
-.⃟𖥔 ݁. 𖦹˙— *\`\`𝗘𝗥𝗥𝗢𝗥\`\`* —˙𖦹.🕹️꒷
+.⃟𖥔 ݁. 𖦹˙— *\`\`𝗘𝗥𝗢𝗥\`\`* —˙𖦹.🕹️꒷
 
  *⤷ ┇ 𝗙𝗔𝗟𝗧𝗔 𝗧𝗘𝗫𝗧𝗢* ：✿ 。
 
@@ -242,16 +237,16 @@ let handler = async (m, { conn, command, text, usedPrefix }) => {
 
         await new Promise((resolve, reject) => {
             ffmpeg(url)
-          .audioCodec('libopus')
-          .toFormat('opus')
-          .outputOptions([
+         .audioCodec('libopus')
+         .toFormat('opus')
+         .outputOptions([
                     '-avoid_negative_ts make_zero',
                     '-ac 1',
                     '-b:a 64k'
                 ])
-          .on('end', () => resolve(true))
-          .on('error', (err) => reject(err))
-          .save(tmpFilePath)
+         .on('end', () => resolve(true))
+         .on('error', (err) => reject(err))
+         .save(tmpFilePath)
         })
 
         let audioBuffer = fs.readFileSync(tmpFilePath)
