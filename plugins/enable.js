@@ -60,8 +60,8 @@ let handler = async (m, { conn, usedPrefix, command, args, isOwner, isAdmin, isR
 
   if (fail) return
 
-  // IMAGEN RICKY BOT
-  let catalogoImg = { url: 'https://files.evogb.win/QFXQtu.jpg' } // cambia por tu banner gamer si tienes
+  // IMAGEN GLOBAL RICKY BOT
+  let catalogoImg = { url: global.botimg }
 
   let estadoTexto = isEnable? 'Activado 🌀' : 'Desactivado ✖️'
   let estadoEmoji = isEnable? '🟢' : '🔴'
