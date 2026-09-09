@@ -1,6 +1,9 @@
 import { WAMessageStubType } from '@whiskeysockets/baileys'
 import fetch from 'node-fetch'
 
+// IMAGEN FIJA RICKY BOT
+const DEFAULT_IMG = 'https://files.evogb.win/1FbQzR.jpg'
+
 const handler = async (m, { conn, args, isAdmin, isOwner }) => {
   if (!isAdmin &&!isOwner) return conn.reply(m.chat, `😎 𓆩 ***𝗥𝗜𝗖𝗞𝗬 𝗕𝗢𝗧*** 𓆪 🤖\n\n💼 *Solo admins pueden usar este comando*`, m)
   let chat = global.db.data.chats[m.chat]
@@ -8,7 +11,7 @@ const handler = async (m, { conn, args, isAdmin, isOwner }) => {
 
   if (/on/i.test(args[0])) {
     chat.bienvenida = true
-    await conn.reply(m.chat, `😎 𓆩 ***𝗕𝗜𝗘𝗡𝗩𝗘𝗡𝗜𝗗𝗔*** 𓆪 🤖\n\n🟢 *Activada con audios*`, m)
+    await conn.reply(m.chat, `😎 𓆩 ***𝗕𝗜𝗘𝗡𝗩𝗘𝗡𝗜𝗗𝗔*** 𓆪 🤖\n\n🟢 *Activada con imagen de Ricky*`, m)
   } else if (/off/i.test(args[0])) {
     chat.bienvenida = false
     await conn.reply(m.chat, `😎 𓆩 ***𝗕𝗜𝗘𝗡𝗩𝗘𝗡𝗜𝗗𝗔*** 𓆪 🤖\n\n🔴 *Desactivada*`, m)
@@ -31,8 +34,6 @@ handler.before = async function (m, { conn, groupMetadata }) {
   const userJid = m.messageStubParameters?.[0] || m.participant
   if (!userJid) return!0
 
-  // IMAGEN GLOBAL - USA global.botimg
-  const DEFAULT_IMG = global.botimg
   let imgBuffer = null
 
   // PASO 1: Intentar obtener foto del usuario
@@ -41,7 +42,7 @@ handler.before = async function (m, { conn, groupMetadata }) {
     let res = await fetch(userPP)
     imgBuffer = await res.buffer()
   } catch {
-    // PASO 2: Si falla, descargar la default global
+    // PASO 2: Si falla, descargar la default de Ricky
     try {
       let res = await fetch(DEFAULT_IMG)
       imgBuffer = await res.buffer()
