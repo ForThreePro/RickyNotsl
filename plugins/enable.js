@@ -4,19 +4,22 @@ let handler = async (m, { conn, usedPrefix, command, args, isOwner, isAdmin, isR
   let bot = global.db.data.settings[conn.user.jid] || {}
   let type = command.toLowerCase()
 
-  if (!args[0]) return m.reply(`𓆩 𝗥𝗜𝗖𝗞𝗬 𝗕𝗢𝗧 𝗖𝗢𝗡𝗙𝗜𝗚 𓆪
+  // IMAGEN FIJA RICKY PREM
+  const RICKY_IMG = 'https://files.evogb.win/1FbQzR.jpg'
+
+  if (!args[0]) return m.reply(`😎 𓆩 ***𝗥𝗜𝗖𝗞𝗬 𝗣𝗥𝗘𝗠 𝗖𝗢𝗡𝗙𝗜𝗚*** 𓆪 🤖
 
 ⚙️ *Configuración incorrecta*
 📌 *Uso:* ${usedPrefix + command} on
 📌 *Uso:* ${usedPrefix + command} off
 
 *Ejemplo:* ${usedPrefix + command} on
-> "Activa o desactiva funciones del sistema" 🕹️`)
+> "Activa o desactiva funciones del sistema" 💼`)
 
   let fail = false
   switch (type) {
     case 'welcome': case 'bienvenida':
-      if (m.isGroup &&!isAdmin) { return conn.reply(m.chat, `🎮 *Solo admins pueden configurar esto*`, m); fail = true; break }
+      if (m.isGroup &&!isAdmin) { return conn.reply(m.chat, `💼 *Solo admins pueden configurar esto*`, m); fail = true; break }
       chat.bienvenida = isEnable
       break
     case 'subbots': case 'serbot':
@@ -28,19 +31,19 @@ let handler = async (m, { conn, usedPrefix, command, args, isOwner, isAdmin, isR
       bot.antiSpam = isEnable
       break
     case 'antilink':
-      if (m.isGroup &&!isAdmin) { return conn.reply(m.chat, `🎮 *Solo admins*`, m); fail = true; break }
+      if (m.isGroup &&!isAdmin) { return conn.reply(m.chat, `💼 *Solo admins*`, m); fail = true; break }
       chat.antiLink = isEnable
       break
     case 'antibot':
-      if (m.isGroup &&!isAdmin) { return conn.reply(m.chat, `🎮 *Solo admins*`, m); fail = true; break }
+      if (m.isGroup &&!isAdmin) { return conn.reply(m.chat, `💼 *Solo admins*`, m); fail = true; break }
       chat.antiBot = isEnable
       break
     case 'modoadmin':
-      if (m.isGroup &&!isAdmin) { return conn.reply(m.chat, `🎮 *Solo admins*`, m); fail = true; break }
+      if (m.isGroup &&!isAdmin) { return conn.reply(m.chat, `💼 *Solo admins*`, m); fail = true; break }
       chat.modoadmin = isEnable
       break
     case 'nsfw': case 'antinopor':
-      if (m.isGroup &&!isAdmin) { return conn.reply(m.chat, `🎮 *Solo admins*`, m); fail = true; break }
+      if (m.isGroup &&!isAdmin) { return conn.reply(m.chat, `💼 *Solo admins*`, m); fail = true; break }
       chat.nsfw = isEnable
       break
     case 'audios':
@@ -60,22 +63,22 @@ let handler = async (m, { conn, usedPrefix, command, args, isOwner, isAdmin, isR
 
   if (fail) return
 
-  // IMAGEN GLOBAL RICKY BOT
-  let catalogoImg = { url: global.botimg }
+  // IMAGEN FIJA RICKY PREM
+  let catalogoImg = { url: RICKY_IMG }
 
   let estadoTexto = isEnable? 'Activado 🌀' : 'Desactivado ✖️'
   let estadoEmoji = isEnable? '🟢' : '🔴'
 
-  let statusTxt = ` 𓆩 𝗖𝗢𝗡𝗙𝗜𝗚𝗨𝗥𝗔𝗖𝗜𝗢𝗡 𓆪
+  let statusTxt = `😎 𓆩 ***𝗖𝗢𝗡𝗙𝗜𝗚𝗨𝗥𝗔𝗖𝗜𝗢𝗡 𝗣𝗥𝗘𝗠*** 𓆪 🤖
 
-.⃟𖥔 ݁. 𖦹˙— \`\`𝗦𝗜𝗦𝗧𝗘𝗠𝗔 𝗢𝗡/𝗢𝗙\`\` —˙𖦹.🎮꒷
+.⃟𖥔 ݁. 𖦹˙— \`\`𝗦𝗜𝗦𝗧𝗘𝗠𝗔 𝗢𝗡/𝗢𝗙\`\` —˙𖦹.💼꒷
 
 ⚙️ *Función:* ${type}
 📊 *Estado:* ${estadoTexto} ${estadoEmoji}
 👑 *Por:* @${m.sender.split('@')[0]}
 
 ━━━━━━━━━━━
-*Powered by*: ***Ricky Bot Oficial*** 🎮`
+*Powered by*: ***Ricky Bot Prem*** 🤖`
 
   await conn.sendMessage(m.chat, {
     image: catalogoImg,
