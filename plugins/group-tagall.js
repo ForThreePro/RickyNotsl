@@ -80,12 +80,8 @@ const handler = async (m, { isOwner, isAdmin, conn, participants, args }) => {
 *Powered by*: ***Ricky Bot Oficial*** 🎮
 *Owner*: @whois.yallico`
 
-    // IMAGENES ROTATORIAS GAMER
-    const images = [
-      'https://files.evogb.win/1FbQzR.jpg',
-      'https://files.evogb.win/1FbQzR.jpg'
-    ]
-    const imageUrl = { url: images[Math.floor(Math.random() * images.length)] }
+    // IMAGEN GLOBAL
+    const imageUrl = { url: global.botimg }
 
     await conn.sendMessage(m.chat, {
       image: imageUrl,
