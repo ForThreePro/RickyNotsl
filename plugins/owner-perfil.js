@@ -1,4 +1,3 @@
-// FUNCION PARA REACCIONES COMPATIBLE
 const react = async (conn, m, text) => {
   try { await conn.sendMessage(m.chat, { react: { text: text, key: m.key } }) } catch {}
 }
@@ -50,12 +49,12 @@ let handler = async (m, { conn, args }) => {
 ━━━━━━━━━━━
 *Powered by*: ***Ricky Bot Oficial*** 🎮`
 
-    // Obtener foto de perfil
+    // Obtener foto de perfil - IMAGEN GLOBAL
     let pp
     try {
       pp = await conn.profilePictureUrl(who, 'image')
     } catch {
-      pp = 'https://files.evogb.win/1FbQzR.jpg' // imagen por defecto gamer
+      pp = global.botimg // imagen por defecto global
     }
 
     await conn.sendMessage(m.chat, {
