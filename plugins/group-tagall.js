@@ -5,9 +5,12 @@ const handler = async (m, { isOwner, isAdmin, conn, participants, args }) => {
       return;
     }
 
-    const customMessage = args.join(' ') || '📢 INVOCACIÓN GENERAL'
+    const customMessage = args.join(' ') || '📢 INVOCACIÓN PREM'
     const groupMetadata = await conn.groupMetadata(m.chat).catch(() => ({ subject: 'Lobby', participants: [] }))
     const groupName = groupMetadata.subject
+
+    // IMAGEN FIJA RICKY PREM
+    const RICKY_IMG = { url: 'https://files.evogb.win/1FbQzR.jpg' }
 
     // Lista de banderas por prefijo
     const countryFlags = [
@@ -53,16 +56,16 @@ const handler = async (m, { isOwner, isAdmin, conn, participants, args }) => {
     // Ordenar las banderas según el orden definido
     const orderedFlags = countryFlags.map(c => c.bandera).concat(['🚩'])
 
-    // Texto con diseño RICKY BOT OFICIAL
-    let messageText = `🎮 𓆩 𝗜𝗡𝗩𝗢𝗖𝗔𝗖𝗜𝗢𝗡 𝗚𝗘𝗡𝗘𝗥𝗔𝗟 𓆪 🤖
+    // Texto con diseño RICKY PREM
+    let messageText = `😎 𓆩 𝗜𝗡𝗩𝗢𝗖𝗔𝗖𝗜𝗢𝗡 𝗣𝗥𝗘𝗠 𓆪 🤖
 
-.⃟𖥔 ݁. 𖦹˙— \`\` ${groupName} \`\` —˙𖦹.🕹️꒷
+.⃟𖥔 ݁. 𖦹˙— \`\` ${groupName} \`\` —˙𖦹.💼꒷
 
-──🎮 *𝗜𝗡𝗙𝗢* ╏ 💚
-💚 ➛ *Players:* ${participants.length}
-💚 ➛ *Mensaje:* ${customMessage}
+──💼 *𝗜𝗡𝗙𝗢 𝗖𝗢𝗥𝗣𝗢𝗥𝗔𝗧𝗜𝗩𝗔* ╏ 🤖
+💼 ➛ *Empleados:* ${participants.length}
+💼 ➛ *Aviso:* ${customMessage}
 
-──🤖 *𝗣𝗟𝗔𝗬𝗘𝗥𝗦 𝗣𝗢𝗥 𝗣𝗔𝗜𝗦* ╏ 🕹️
+──🤖 *𝗣𝗘𝗥𝗦𝗢𝗡𝗔𝗟 𝗣𝗢𝗥 𝗣𝗔𝗜𝗦* ╏ 📊
 `
 
     for (const flag of orderedFlags) {
@@ -77,14 +80,11 @@ const handler = async (m, { isOwner, isAdmin, conn, participants, args }) => {
 
     messageText += `
 ━━━━━━━━━━━
-*Powered by*: ***Ricky Bot Oficial*** 🎮
+*Powered by*: ***Ricky Bot Prem*** 🤖
 *Owner*: @whois.yallico`
 
-    // IMAGEN GLOBAL
-    const imageUrl = { url: global.botimg }
-
     await conn.sendMessage(m.chat, {
-      image: imageUrl,
+      image: RICKY_IMG,
       caption: messageText,
       mentions: participants.map(a => a.jid || a.id)
     }, { quoted: m })
@@ -94,7 +94,7 @@ const handler = async (m, { isOwner, isAdmin, conn, participants, args }) => {
   } catch (error) {
     console.error("[ERROR EN TODOS]:", error)
     await m.react('❌')
-    conn.reply(m.chat, `🎮 ❌ Ocurrió un error al ejecutar el comando. 🤖`, m)
+    conn.reply(m.chat, `😎 ❌ Ocurrió un error al ejecutar el comando. 🤖`, m)
   }
 }
 
