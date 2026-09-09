@@ -1,11 +1,8 @@
 import { WAMessageStubType } from '@whiskeysockets/baileys'
 import fetch from 'node-fetch'
 
-// IMAGEN FIJA RICKY BOT
-const DEFAULT_IMG = 'https://files.evogb.win/1FbQzR.jpg'
-
 const handler = async (m, { conn, args, isAdmin, isOwner }) => {
-  if (!isAdmin &&!isOwner) return conn.reply(m.chat, `😎 𓆩 ***𝗥𝗜𝗖𝗞𝗬 𝗕𝗢𝗧*** 𓆪 🤖\n\n💼 *Solo admins pueden usar este comando*`, m)
+  if (!isAdmin &&!isOwner) return conn.reply(m.chat, `😎 𓆩 ***𝗥𝗜𝗖𝗞𝗬 𝗣𝗥𝗘𝗠*** 𓆪 🤖\n\n💼 *Solo admins pueden usar este comando*`, m)
   let chat = global.db.data.chats[m.chat]
   if (!chat) global.db.data.chats[m.chat] = {}
 
@@ -16,7 +13,7 @@ const handler = async (m, { conn, args, isAdmin, isOwner }) => {
     chat.bienvenida = false
     await conn.reply(m.chat, `😎 𓆩 ***𝗕𝗜𝗘𝗡𝗩𝗘𝗡𝗜𝗗𝗔*** 𓆪 🤖\n\n🔴 *Desactivada*`, m)
   } else {
-    await conn.reply(m.chat, `😎 𓆩 ***𝗥𝗜𝗖𝗞𝗬 𝗕𝗢𝗧*** 𓆪 🤖\n\n📌 *Uso:* ${m.prefix}bienvenida on/off`, m)
+    await conn.reply(m.chat, `😎 𓆩 ***𝗥𝗜𝗖𝗞𝗬 𝗣𝗥𝗘𝗠*** 𓆪 🤖\n\n📌 *Uso:* ${m.prefix}bienvenida on/off`, m)
   }
 }
 
@@ -34,6 +31,7 @@ handler.before = async function (m, { conn, groupMetadata }) {
   const userJid = m.messageStubParameters?.[0] || m.participant
   if (!userJid) return!0
 
+  const DEFAULT_IMG = 'https://files.evogb.win/1FbQzR.jpg' // <-- LINK FIJO
   let imgBuffer = null
 
   // PASO 1: Intentar obtener foto del usuario
@@ -42,7 +40,7 @@ handler.before = async function (m, { conn, groupMetadata }) {
     let res = await fetch(userPP)
     imgBuffer = await res.buffer()
   } catch {
-    // PASO 2: Si falla, descargar la default de Ricky
+    // PASO 2: Si falla, descargar la de Ricky por defecto
     try {
       let res = await fetch(DEFAULT_IMG)
       imgBuffer = await res.buffer()
@@ -62,7 +60,7 @@ handler.before = async function (m, { conn, groupMetadata }) {
     case WAMessageStubType.GROUP_PARTICIPANT_ADD:
       audio = chat.audiowelcome
       txt = chat.customWelcome? chat.customWelcome.replace(/@user/gi, userTag).replace(/@group/gi, groupName).replace(/@desc/gi, groupDesc) :
-`😎 𓆩 ***𝗡𝗨𝗘𝗩𝗢 𝗘𝗠𝗣𝗟𝗘𝗔𝗗𝗢*** 𓆪 🤖\n\n💼 *${userTag}* se unió a *${groupName}*\n📊 *Total:* ${membersCount} miembros`
+`😎 𓆩 ***𝗡𝗨𝗘𝗩𝗢 𝗘𝗠𝗣𝗟𝗘𝗔𝗗𝗢*** 𓆪 🤖\n\n💼 *${userTag}* se unió a *${groupName}*\n📊 *Miembro N°:* ${membersCount}`
       break
 
     case WAMessageStubType.GROUP_PARTICIPANT_LEAVE:
@@ -79,7 +77,6 @@ handler.before = async function (m, { conn, groupMetadata }) {
   }
 
   if (txt) {
-    // PASO 3: Mandar SIEMPRE con imagen si se pudo descargar
     if (imgBuffer) {
       await conn.sendMessage(m.chat, { image: imgBuffer, caption: txt, mentions: [userJid] })
     } else {
