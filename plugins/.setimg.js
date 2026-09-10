@@ -1,63 +1,57 @@
-import fs from 'fs'
-import crypto from "crypto"
-import { FormData, Blob } from "formdata-node"
-import { fileTypeFromBuffer } from "file-type"
+import { existsSync, promises as fs } from 'fs'
+import path from 'path'
 
-let handler = async (m, { conn, args, isOwner, isROwner }) => {
-if (!isOwner &&!isROwner) return m.reply(`*Solo Owner*`)
-
-let link = args[0]
-let q = m.quoted? m.quoted : m
-let mime = (q.msg || q).mimetype || ''
-
-try {
-    // CASO 1: RESPONDIÓ A UNA IMAGEN
-    if (!link && mime.startsWith('image/')) {
-        await conn.sendMessage(m.chat, { react: { text: '⏳', key: m.key } })
-        let media = await q.download()
-        let upload = await myCloud(media)
-        if (!upload.url) throw new Error('No se pudo subir')
-        link = upload.url
+var handler = async (m, { conn }) => {
+    if (global.conn.user.jid !== conn.user.jid) {
+        return conn.reply(m.chat, '⚠️ *Usa esto en el número principal*', m)
     }
 
-    // CASO 2: PEGO LINK DIRECTO
-    if (!link) return m.reply(`*USO INCORRECTO*\n\n*Opción 1:*.setimg https://i.imgur.com/tu-foto.jpg\n*Opción 2:* Responde a una imagen con.setimg`)
-    if (!link.startsWith('http')) return m.reply(`*El link debe ser un URL valido*`)
+    let rutas = [`./Sesiones/Principal/`, `./sesiones/Principal/`, `./sessions/Principal/`]
+    let sessionPath = rutas.find(r => existsSync(r))
 
-    // Actualizar variable global
-    global.botimg = link
+    if (!sessionPath) return m.reply('🧐 *No encontré la carpeta de sesión*')
 
-    // Guardar en config.json para que no se pierda al reiniciar
-    let config = {}
-    if (fs.existsSync('./config.json')) {
-        config = JSON.parse(fs.readFileSync('./config.json'))
+    await m.reply(`😴 *Limpiando archivos basura de sesión...*`)
+
+    let files = await fs.readdir(sessionPath)
+    let filesDeleted = 0
+
+    for (const file of files) {
+        // SOLO BORRAR: pre-keys, sender-key, session
+        if (
+            file.startsWith('pre-key-') || 
+            file.startsWith('sender-key') || 
+            file.startsWith('session-')
+        ) {
+            if (!file.startsWith('creds') && !file.startsWith('app-state')) {
+                await fs.unlink(path.join(sessionPath, file))
+                filesDeleted++;
+            }
+        }
     }
-    config.botimg = link
-    fs.writeFileSync('./config.json', JSON.stringify(config, null, 2))
 
-    await conn.sendMessage(m.chat, { react: { text: '✅', key: m.key } })
-    await m.reply(`*✅ IMAGEN GLOBAL ACTUALIZADA*\n\n*➤ Nuevo link:* ${link}\n*➤ Servidor:* evogb.win\n*➤ Estado:* Se aplico en todos los comandos`)
+    let menu = `𐔌 ꒱ ***.dsowner*** 𐔌 ꒱ 🧹
 
-} catch (e) {
-    console.log(e)
-    await conn.sendMessage(m.chat, { react: { text: '❌', key: m.key } })
-    m.reply(`*Error al subir/guardar la imagen*`)
+.⃟𖥔 ݁. 𖦹˙— \`\`FIX\`\` —˙𖦹.⚙️꒷
+
+── *📝 DESCRIPCIÓN* ╏
+🗑️ ➛ Elimina archivos de caché basura de la sesión
+🔒 ➛ No borra \`creds\` ni \`app-state\` para que el bot no se desconecte
+
+── *📖 USO* ╏
+👑 ➛ Usar solo en el número principal del bot
+🔌 ➛ El bot sigue conectado, no necesita reinicio
+
+── *📊 RESULTADO* ╏
+✅ ➛ Archivos eliminados: *${filesDeleted}*
+💎 ➛ Estado: *${filesDeleted === 0 ? 'Todo limpio' : 'Limpieza completada'}*
+
+━━━━━━━━━━━`
+
+    await conn.sendMessage(m.chat, { text: menu }, { quoted: m })
 }
-}
-
-async function myCloud(content) {
-  const fileType = await fileTypeFromBuffer(content)
-  const ext = fileType? fileType.ext : 'jpg'
-  const mime = fileType? fileType.mime : 'image/jpeg'
-  const formData = new FormData()
-  formData.append("file", new Blob([content], { type: mime }), `${crypto.randomBytes(5).toString("hex")}.${ext}`)
-  const response = await fetch("https://evogb.win/api/upload", { method: "POST", body: formData })
-  if (!response.ok) throw new Error()
-  return await response.json()
-}
-
-handler.help = ['setimg <link> o responde a imagen']
-handler.tags = ['owner']
-handler.command = ['setimg', 'img', 'fotobot']
-handler.owner = true
+handler.help = ['dsowner']
+handler.tags = ['fix', 'owner']
+handler.command = ['dsowner','delai','clearcache']
+handler.rowner = true
 export default handler
