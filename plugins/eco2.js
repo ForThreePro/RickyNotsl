@@ -99,27 +99,32 @@ let handler = async (m, { conn, args, command, usedPrefix }) => {
     }
 
     // 3. SLOTS
-    if (command === 'slots' || command === 'slot') {
-        let monto = parseInt(args[0])
-        let apuestaMax = 200 + (user.level * 100)
-        if (!monto || monto < 10) return conn.reply(m.chat, `❌ Apuesta mínima: 10 ${MONEDA}`, m)
-        if (monto > apuestaMax) return conn.reply(m.chat, `❌ Con tu Nv.${user.level} max puedes apostar ${apuestaMax} ${MONEDA}`, m)
-        if (user.rcoins < monto) return conn.reply(m.chat, `❌ No tienes suficientes ${MONEDA}`, m)
+if (command === 'slots' || command === 'slot') {
+    let monto = parseInt(args[0])
+    let apuestaMax = 200 + (user.level * 100)
+    if (!monto || monto < 10) return conn.reply(m.chat, `❌ Apuesta mínima: 10 ${MONEDA}`, m)
+    if (monto > apuestaMax) return conn.reply(m.chat, `❌ Con tu Nv.${user.level} max puedes apostar ${apuestaMax} ${MONEDA}`, m)
+    if (user.rcoins < monto) return conn.reply(m.chat, `❌ No tienes suficientes ${MONEDA}`, m)
 
-        user.rcoins -= monto
-        let s1 = iconos[Math.floor(Math.random() * iconos.length)]
-        let s2 = iconos[Math.floor(Math.random() * iconos.length)]
-        let s3 = iconos[Math.floor(Math.random() * iconos.length)]
+    user.rcoins -= monto // <- Primero se cobra la apuesta
+    let s1 = iconos[Math.floor(Math.random() * iconos.length)]
+    let s2 = iconos[Math.floor(Math.random() * iconos.length)]
+    let s3 = iconos[Math.floor(Math.random() * iconos.length)]
 
-        let iguales = s1 === s2 && s2 === s3? 3 : s1 === s2 || s1 === s3 || s2 === s3? 2 : 1
-        let baseMulti = iguales === 3? [10,15,25,50,75,100][Math.floor(Math.random()*6)] : iguales === 2? [2,5][Math.floor(Math.random()*2)] : 0
-        let multi = baseMulti + (user.level * 0.5)
-        let gana = Math.floor(monto * multi)
-        if (gana > 0) user.rcoins += gana
+    let iguales = s1 === s2 && s2 === s3? 3 : s1 === s2 || s1 === s3 || s2 === s3? 2 : 0 // <- 0 si no hay nada igual
+    let baseMulti = iguales === 3? [10,15,25,50,75,100][Math.floor(Math.random()*6)] : iguales === 2? [2,3,4][Math.floor(Math.random()*3)] : 0
+    let multi = baseMulti + (user.level * 0.2) // <- Baje el bono de nivel
 
-        let resultado = iguales === 3? `🎉 JACKPOT x${multi.toFixed(1)}!` : iguales === 2? `✨ Ganaste x${multi.toFixed(1)}!` : `😢 Perdiste`
-        return conn.reply(m.chat, `🎰 *TRAGAMONEDAS Nv.${user.level}*\n\n[${s1}] [${s2}] [${s3}]\n\n${resultado}\n${gana > 0? `+${gana} ${MONEDA}` : `-${monto} ${MONEDA}`}`, m)
+    let gana = 0
+    let resultado = `😢 PERDISTE`
+
+    if (baseMulti > 0) { // <- Solo paga si baseMulti > 0
+        gana = Math.floor(monto * multi)
+        user.rcoins += gana
+        resultado = iguales === 3? `🎉 JACKPOT x${multi.toFixed(1)}!` : `✨ Ganaste x${multi.toFixed(1)}!`
     }
+
+    return conn.reply(m.chat, `🎰 *TRAGAMONEDAS Nv.${user.level}*\n\n[${s1}] [${s2}] [${s3}]\n\n${resultado}\n${gana > 0? `+${gana} ${MONEDA}` : `-${monto} ${MONEDA}`}`, m)
 }
 
 // RESPONDER TRIVIA
