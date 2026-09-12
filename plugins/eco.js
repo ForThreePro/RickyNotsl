@@ -1,3 +1,5 @@
+let MONEDA = 'R-COINS' // Nombre de la moneda
+
 let preguntas = [
     { q: '¿Cuánto es 2 + 2?', a: '4' },
     { q: '¿Cuánto es 5 + 3?', a: '8' },
@@ -56,79 +58,88 @@ let preguntas = [
     { q: '¿Qué usamos para oler?', a: 'nariz' }
 ]
 
+// Función para crear usuario si no existe
+function getUser(id) {
+    if (!global.db.data.users[id]) global.db.data.users[id] = {}
+    let user = global.db.data.users[id]
+    if (user.rcoins === undefined) user.rcoins = 0
+    if (user.rbank === undefined) user.rbank = 0
+    return user
+}
+
 let handler = async (m, { conn, args, command, usedPrefix }) => {
-    let user = global.db.data.users[m.sender]
-    if (!user.lasana) user.lasana = 0
-    if (!user.bank) user.bank = 0
+    let user = getUser(m.sender)
 
     if (command === 'saldo' || command === 'balance') {
         let texto = `💰 *TU SALDO*\n\n` +
-                    `👛 *Billetera*: ${user.lasana} monedas\n` +
-                    `🏦 *Banco*: ${user.bank} monedas\n` +
-                    `💵 *Total*: ${user.lasana + user.bank} monedas`
+                    `👛 *R-COINS*: ${user.rcoins} ${MONEDA}\n` +
+                    `🏦 *BANCO*: ${user.rbank} ${MONEDA}\n` +
+                    `💵 *TOTAL*: ${user.rcoins + user.rbank} ${MONEDA}`
         return conn.reply(m.chat, texto, m)
     }
 
     if (command === 'd' || command === 'dall' || command === 'r' || command === 'rall') {
         let amount = args[0] === 'all' || args[0] === 'todo'?
-            (command === 'd' || command === 'dall'? user.lasana : user.bank)
+            (command === 'd' || command === 'dall'? user.rcoins : user.rbank)
             : parseInt(args[0])
         if (!amount || amount < 1) return conn.reply(m.chat, `*Uso:* \n${usedPrefix}d [monto] | ${usedPrefix}dall\n${usedPrefix}r [monto] | ${usedPrefix}rall`, m)
 
         if (command === 'd' || command === 'dall') {
-            if (user.lasana < amount) return conn.reply(m.chat, `❌ No tienes suficientes monedas en billetera`, m)
-            user.lasana -= amount; user.bank += amount
-            return conn.reply(m.chat, `✅ Depositaste *${amount}* monedas al banco\n👛 Billetera: ${user.lasana}\n🏦 Banco: ${user.bank}`, m)
+            if (user.rcoins < amount) return conn.reply(m.chat, `❌ No tienes suficientes ${MONEDA}`, m)
+            user.rcoins -= amount; user.rbank += amount
+            return conn.reply(m.chat, `✅ Depositaste *${amount}* ${MONEDA} al banco\n👛 R-COINS: ${user.rcoins}\n🏦 BANCO: ${user.rbank}`, m)
         }
         if (command === 'r' || command === 'rall') {
-            if (user.bank < amount) return conn.reply(m.chat, `❌ No tienes suficientes monedas en el banco`, m)
-            user.bank -= amount; user.lasana += amount
-            return conn.reply(m.chat, `✅ Retiraste *${amount}* monedas del banco\n👛 Billetera: ${user.lasana}\n🏦 Banco: ${user.bank}`, m)
+            if (user.rbank < amount) return conn.reply(m.chat, `❌ No tienes suficientes ${MONEDA} en el banco`, m)
+            user.rbank -= amount; user.rcoins += amount
+            return conn.reply(m.chat, `✅ Retiraste *${amount}* ${MONEDA} del banco\n👛 R-COINS: ${user.rcoins}\n🏦 BANCO: ${user.rbank}`, m)
         }
     }
 
     if (command === 'trivia') {
         let tiempo = 10 * 60 * 1000
-        if (new Date - user.lasttrivia < tiempo) return conn.reply(m.chat, `⏰ Espera ${msToTime(user.lasttrivia + tiempo - new Date())} para otra trivia`, m)
+        if (user.lasttrivia && new Date - user.lasttrivia < tiempo) return conn.reply(m.chat, `⏰ Espera ${msToTime(user.lasttrivia + tiempo - new Date())} para otra trivia`, m)
         let preg = preguntas[Math.floor(Math.random() * preguntas.length)]
         user.trivia = preg.a.toLowerCase()
-        return conn.reply(m.chat, `❓ *TRIVIA*\n\n${preg.q}\n\n*Premio:* 50 monedas\nResponde en 30 segundos`, m)
+        user.triviatime = new Date * 1
+        return conn.reply(m.chat, `❓ *TRIVIA*\n\n${preg.q}\n\n*Premio:* 50 ${MONEDA}\nResponde en 30 segundos`, m)
     }
 
     if (command === 'ruleta' || command === 'rlt') {
         let color = args[0]?.toLowerCase()
         let monto = parseInt(args[1])
         if (!['red', 'black', 'rojo', 'negro'].includes(color)) return conn.reply(m.chat, `*Uso:* ${usedPrefix}ruleta [red/black] [monto]\nEjemplo: ${usedPrefix}ruleta red 100`, m)
-        if (!monto || monto < 10) return conn.reply(m.chat, `❌ Apuesta mínima: 10 monedas`, m)
-        if (user.lasana < monto) return conn.reply(m.chat, `❌ No tienes suficientes monedas`, m)
-        user.lasana -= monto
+        if (!monto || monto < 10) return conn.reply(m.chat, `❌ Apuesta mínima: 10 ${MONEDA}`, m)
+        if (user.rcoins < monto) return conn.reply(m.chat, `❌ No tienes suficientes ${MONEDA}`, m)
+        user.rcoins -= monto
         let resultado = Math.random() < 0.5? 'red' : 'black'
         let colorTxt = resultado === 'red'? '🔴 ROJO' : '⚫ NEGRO'
         if (((color === 'red' || color === 'rojo') && resultado === 'red') || ((color === 'black' || color === 'negro') && resultado === 'black')) {
-            user.lasana += monto * 2
-            return conn.reply(m.chat, `🎉 Salió ${colorTxt}\n*GANASTE x2:* +${monto * 2} monedas\n💰 Total: ${user.lasana}`, m)
+            user.rcoins += monto * 2
+            return conn.reply(m.chat, `🎉 Salió ${colorTxt}\n*GANASTE x2:* +${monto * 2} ${MONEDA}\n💰 Total: ${user.rcoins} ${MONEDA}`, m)
         } else {
-            return conn.reply(m.chat, `😢 Salió ${colorTxt}\n*PERDISTE:* -${monto} monedas\n💰 Total: ${user.lasana}`, m)
+            return conn.reply(m.chat, `😢 Salió ${colorTxt}\n*PERDISTE:* -${monto} ${MONEDA}\n💰 Total: ${user.rcoins} ${MONEDA}`, m)
         }
     }
 }
 
 handler.before = async (m) => {
-    let user = global.db.data.users[m.sender]
+    let user = getUser(m.sender)
     if (user.trivia && m.text.toLowerCase() === user.trivia) {
-        user.lasana += 50; user.lasttrivia = new Date * 1; delete user.trivia
-        m.reply(`✅ *CORRECTO!* +50 monedas\n💰 Total: ${user.lasana}`)
+        if (new Date - user.triviatime > 30000) return delete user.trivia // 30 seg
+        user.rcoins += 50; user.lasttrivia = new Date * 1; delete user.trivia; delete user.triviatime
+        m.reply(`✅ *CORRECTO!* +50 ${MONEDA}\n💰 Total: ${user.rcoins} ${MONEDA}`)
     }
 }
 
 handler.help = [
-    'saldo ( Ver Tus Coins )',
+    `saldo ( Ver Tus ${MONEDA} )`,
     'd [monto] ( Depositar Al Banco )',
     'dall ( Depositar Todo Al Banco )',
     'r [monto] ( Retirar Del Banco )',
     'rall ( Retirar Todo Del Banco )',
-    'trivia ( Responder Preguntas Y Ganar 50 Coins )',
-    'ruleta [color] [monto] ( Apostar Rojo o Negro x2 )'
+    `trivia ( Responder Preguntas Y Ganar 50 ${MONEDA} )`,
+    `ruleta [color] [monto] ( Apostar Rojo o Negro x2 )`
 ]
 handler.tags = ['economy']
 handler.command = ['saldo', 'balance', 'd', 'r', 'dall', 'rall', 'trivia', 'ruleta', 'rlt']
