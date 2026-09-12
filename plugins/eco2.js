@@ -98,41 +98,41 @@ let handler = async (m, { conn, args, command, usedPrefix }) => {
         }
     }
 
-    // 3. SLOTS - VERSION ARREGLADA
+    // 3. SLOTS - SIN NIVEL
 if (command === 'slots' || command === 'slot') {
     let monto = parseInt(args[0])
-    let apuestaMax = 200 + (user.level * 100)
     if (!monto || monto < 10) return conn.reply(m.chat, `❌ Apuesta mínima: 10 ${MONEDA}`, m)
-    if (monto > apuestaMax) return conn.reply(m.chat, `❌ Con tu Nv.${user.level} max puedes apostar ${apuestaMax} ${MONEDA}`, m)
     if (user.rcoins < monto) return conn.reply(m.chat, `❌ No tienes suficientes ${MONEDA}`, m)
 
-    user.rcoins -= monto // Cobramos primero
+    user.rcoins -= monto // Cobramos
 
     let s1 = iconos[Math.floor(Math.random() * iconos.length)]
     let s2 = iconos[Math.floor(Math.random() * iconos.length)]
     let s3 = iconos[Math.floor(Math.random() * iconos.length)]
 
-    let iguales = s1 === s2 && s2 === s3? 3 : s1 === s2 || s1 === s3 || s2 === s3? 2 : 0
+    let iguales = 0
+    if (s1 === s2 && s2 === s3) iguales = 3
+    else if (s1 === s2 || s1 === s3 || s2 === s3) iguales = 2
 
     let gana = 0
-    let multi = 0
-    let resultado = `😢 PERDISTE -${monto} ${MONEDA}`
+    let texto = `😢 PERDISTE -${monto} ${MONEDA}`
 
-    if (iguales === 3) {
-        multi = [10,15,25,50,75,100][Math.floor(Math.random()*6)] + (user.level * 0.2) // JACKPOT + bono nivel
+    if (iguales === 3) { // JACKPOT
+        let multi = [10,15,25,50,75,100][Math.floor(Math.random()*6)] // SIN BONO DE NIVEL
         gana = Math.floor(monto * multi)
         user.rcoins += gana
-        resultado = `🎉 JACKPOT x${multi.toFixed(1)}! +${gana} ${MONEDA}`
+        texto = `🎉 JACKPOT x${multi}! +${gana} ${MONEDA}`
     }
-    else if (iguales === 2) {
-        multi = [2,3,4][Math.floor(Math.random()*3)] + (user.level * 0.1) // 2 iguales + poco bono
+    else if (iguales === 2) { // 2 IGUALES
+        let multi = [2,3,4][Math.floor(Math.random()*3)] // SIN BONO DE NIVEL
         gana = Math.floor(monto * multi)
         user.rcoins += gana
-        resultado = `✨ Ganaste x${multi.toFixed(1)}! +${gana} ${MONEDA}`
+        texto = `✨ Ganaste x${multi}! +${gana} ${MONEDA}`
     }
 
-    return conn.reply(m.chat, `🎰 *TRAGAMONEDAS Nv.${user.level}*\n\n[${s1}] [${s2}] [${s3}]\n\n${resultado}`, m)
+    return conn.reply(m.chat, `🎰 *TRAGAMONEDAS*\n\n[${s1}] [${s2}] [${s3}]\n\n${texto}\n👛 Saldo: ${user.rcoins} ${MONEDA}`, m)
 }
+
 // RESPONDER TRIVIA
 handler.before = async (m) => {
     let user = getUser(m.sender)
