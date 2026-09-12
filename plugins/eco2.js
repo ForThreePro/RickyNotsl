@@ -1,16 +1,17 @@
 let iconos = ['🍒', '🍋', '⭐', '💎', '7']
+let MONEDA = 'R-COINS' // <-- AQUI CAMBIAS EL NOMBRE
 
 // Función para asegurar que el usuario existe en DB
-function getUser(m, id) {
+function getUser(id) {
     if (!global.db.data.users[id]) global.db.data.users[id] = {}
     let user = global.db.data.users[id]
-    if (!user.lasana) user.lasana = 0
-    if (!user.bank) user.bank = 0
+    if (user.rcoins === undefined) user.rcoins = 0
+    if (user.rbank === undefined) user.rbank = 0
     return user
 }
 
 let handler = async (m, { conn, args, command, usedPrefix }) => {
-    let user = getUser(m, m.sender)
+    let user = getUser(m.sender)
 
     // 1. COMANDO ROBAR
     if (command === 'robar') {
@@ -18,7 +19,7 @@ let handler = async (m, { conn, args, command, usedPrefix }) => {
         if (!who) return conn.reply(m.chat, `*Uso:* ${usedPrefix}robar @usuario`, m)
         if (who === m.sender) return conn.reply(m.chat, `❌ No te puedes robar a ti mismo`, m)
 
-        let target = getUser(m, who) // AQUI ESTABA EL BUG. Ahora se crea si no existe
+        let target = getUser(who) // Se crea si no existe
 
         let tiempo = 1 * 60 * 60 * 1000
         if (user.lastrob && new Date - user.lastrob < tiempo) {
@@ -26,48 +27,49 @@ let handler = async (m, { conn, args, command, usedPrefix }) => {
             return conn.reply(m.chat, `⏰ Espera ${falta} para volver a robar`, m)
         }
 
-        let totalTarget = target.lasana + target.bank
-        if (totalTarget < 10) return conn.reply(m.chat, `❌ @${who.split('@')[0]} no tiene suficientes monedas\nTiene: ${totalTarget} coins`, m, { mentions: [who] })
+        let totalTarget = target.rcoins + target.rbank
+        if (totalTarget < 10) return conn.reply(m.chat, `❌ @${who.split('@')[0]} no tiene suficientes ${MONEDA}\n*Tiene:* ${totalTarget} ${MONEDA}`, m, { mentions: [who] })
 
         let robo = Math.floor(Math.random() * totalTarget * 0.3) + 10
         if (robo > totalTarget) robo = totalTarget
 
-        if (target.lasana >= robo) {
-            target.lasana -= robo
+        // Primero roba de R-COINS, luego del banco
+        if (target.rcoins >= robo) {
+            target.rcoins -= robo
         } else {
-            let falta = robo - target.lasana
-            target.lasana = 0
-            target.bank -= falta
+            let falta = robo - target.rcoins
+            target.rcoins = 0
+            target.rbank -= falta
         }
 
-        user.lasana += robo
+        user.rcoins += robo
         user.lastrob = new Date * 1
 
-        return conn.reply(m.chat, `🕶️ *ROBASTE CON ÉXITO*\n+${robo} monedas de @${who.split('@')[0]}\n\n💰 Tu billetera: ${user.lasana}\n👛 Billetera de @${who.split('@')[0]}: ${target.lasana}\n🏦 Banco de @${who.split('@')[0]}: ${target.bank}`, m, { mentions: [who] })
+        return conn.reply(m.chat, `🕶️ *ROBASTE CON ÉXITO*\n+${robo} ${MONEDA} de @${who.split('@')[0]}\n\n💰 *TUS R-COINS:* ${user.rcoins}\n👛 *R-COINS DE @${who.split('@')[0]}:* ${target.rcoins}\n🏦 *BANCO DE @${who.split('@')[0]}:* ${target.rbank} ${MONEDA}`, m, { mentions: [who] })
     }
 
     // 2. COMANDO PAY / PAGAR
     if (command === 'pay' || command === 'pagar') {
         let who = m.mentionedJid[0]
         let monto = parseInt(args[0])
-        if (!who) return conn.reply(m.chat, `*Uso:* ${usedPrefix}pay [monto] @usuario`, m)
+        if (!who) return conn.reply(m.chat, `*Uso:* ${usedPrefix}pay [monto] @usuario\nEjemplo: ${usedPrefix}pay 100 @pepito`, m)
         if (!monto || monto < 1) return conn.reply(m.chat, `❌ Ingresa un monto válido`, m)
-        if (user.lasana < monto) return conn.reply(m.chat, `❌ No tienes suficientes monedas en billetera`, m)
+        if (user.rcoins < monto) return conn.reply(m.chat, `❌ No tienes suficientes ${MONEDA}`, m)
 
-        let target = getUser(m, who) // Se crea si no existe
+        let target = getUser(who)
 
-        user.lasana -= monto
-        target.lasana += monto
-        return conn.reply(m.chat, `💸 *TRANSFERENCIA EXITOSA*\n\nEnviado: *${monto}* monedas a @${who.split('@')[0]}\n\n💰 Tu billetera: ${user.lasana}`, m, { mentions: [who] })
+        user.rcoins -= monto
+        target.rcoins += monto
+        return conn.reply(m.chat, `💸 *TRANSFERENCIA EXITOSA*\n\nEnviado: *${monto}* ${MONEDA} a @${who.split('@')[0]}\n\n💰 *TUS R-COINS:* ${user.rcoins}`, m, { mentions: [who] })
     }
 
     // 3. COMANDO SLOTS
     if (command === 'slots' || command === 'slot') {
         let monto = parseInt(args[0])
-        if (!monto || monto < 10) return conn.reply(m.chat, `❌ Apuesta mínima: 10 monedas`, m)
-        if (user.lasana < monto) return conn.reply(m.chat, `❌ No tienes suficientes monedas`, m)
+        if (!monto || monto < 10) return conn.reply(m.chat, `❌ Apuesta mínima: 10 ${MONEDA}`, m)
+        if (user.rcoins < monto) return conn.reply(m.chat, `❌ No tienes suficientes ${MONEDA}`, m)
 
-        user.lasana -= monto
+        user.rcoins -= monto
         let s1 = iconos[Math.floor(Math.random() * iconos.length)]
         let s2 = iconos[Math.floor(Math.random() * iconos.length)]
         let s3 = iconos[Math.floor(Math.random() * iconos.length)]
@@ -75,16 +77,16 @@ let handler = async (m, { conn, args, command, usedPrefix }) => {
         let iguales = s1 === s2 && s2 === s3? 3 : s1 === s2 || s1 === s3 || s2 === s3? 2 : 1
         let multi = iguales === 3? 50 : iguales === 2? 5 : 0
         let gana = monto * multi
-        if (gana > 0) user.lasana += gana
+        if (gana > 0) user.rcoins += gana
 
         let resultado = iguales === 3? `🎉 JACKPOT x${multi}!` : iguales === 2? `✨ Ganaste x${multi}!` : `😢 Perdiste`
-        return conn.reply(m.chat, `🎰 *TRAGAMONEDAS*\n\n[${s1}] [${s2}] [${s3}]\n\n${resultado}\n${gana > 0? `+${gana} monedas` : `-${monto} monedas`}\n\n💰 Total: ${user.lasana}`, m)
+        return conn.reply(m.chat, `🎰 *TRAGAMONEDAS*\n\n[${s1}] [${s2}] [${s3}]\n\n${resultado}\n${gana > 0? `+${gana} ${MONEDA}` : `-${monto} ${MONEDA}`}\n\n💰 *TUS R-COINS:* ${user.rcoins}`, m)
     }
 }
 
 handler.help = [
-    'robar @usuario ( Robar 10% a 30% de sus coins )',
-    'pay [monto] @usuario ( Transferir Coins )',
+    'robar @usuario ( Robar 10% a 30% de sus R-COINS )',
+    'pay [monto] @usuario ( Transferir R-COINS )',
     'slots [monto] ( Jugar Tragamonedas x5 x50 )'
 ]
 handler.tags = ['economy']
