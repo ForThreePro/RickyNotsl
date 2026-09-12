@@ -1,9 +1,16 @@
 let iconos = ['🍒', '🍋', '⭐', '💎', '7']
 
-let handler = async (m, { conn, args, command, usedPrefix }) => {
-    let user = global.db.data.users[m.sender]
+// Función para asegurar que el usuario existe en DB
+function getUser(m, id) {
+    if (!global.db.data.users[id]) global.db.data.users[id] = {}
+    let user = global.db.data.users[id]
     if (!user.lasana) user.lasana = 0
     if (!user.bank) user.bank = 0
+    return user
+}
+
+let handler = async (m, { conn, args, command, usedPrefix }) => {
+    let user = getUser(m, m.sender)
 
     // 1. COMANDO ROBAR
     if (command === 'robar') {
@@ -11,24 +18,20 @@ let handler = async (m, { conn, args, command, usedPrefix }) => {
         if (!who) return conn.reply(m.chat, `*Uso:* ${usedPrefix}robar @usuario`, m)
         if (who === m.sender) return conn.reply(m.chat, `❌ No te puedes robar a ti mismo`, m)
 
-        let target = global.db.data.users[who]
-        if (!target) return conn.reply(m.chat, `❌ Ese usuario no existe en la DB`, m)
-        if (!target.lasana) target.lasana = 0
-        if (!target.bank) target.bank = 0
+        let target = getUser(m, who) // AQUI ESTABA EL BUG. Ahora se crea si no existe
 
-        let tiempo = 1 * 60 * 60 * 1000 // 1 hora cooldown
+        let tiempo = 1 * 60 * 60 * 1000
         if (user.lastrob && new Date - user.lastrob < tiempo) {
             let falta = msToTime(user.lastrob + tiempo - new Date())
             return conn.reply(m.chat, `⏰ Espera ${falta} para volver a robar`, m)
         }
 
         let totalTarget = target.lasana + target.bank
-        if (totalTarget < 10) return conn.reply(m.chat, `❌ @${who.split('@')[0]} no tiene suficientes monedas`, m, { mentions: [who] })
+        if (totalTarget < 10) return conn.reply(m.chat, `❌ @${who.split('@')[0]} no tiene suficientes monedas\nTiene: ${totalTarget} coins`, m, { mentions: [who] })
 
-        let robo = Math.floor(Math.random() * totalTarget * 0.3) + 10 // Roba 10 a 30%
+        let robo = Math.floor(Math.random() * totalTarget * 0.3) + 10
         if (robo > totalTarget) robo = totalTarget
 
-        // Primero roba de billetera, luego del banco
         if (target.lasana >= robo) {
             target.lasana -= robo
         } else {
@@ -47,23 +50,21 @@ let handler = async (m, { conn, args, command, usedPrefix }) => {
     if (command === 'pay' || command === 'pagar') {
         let who = m.mentionedJid[0]
         let monto = parseInt(args[0])
-        if (!who) return conn.reply(m.chat, `*Uso:* ${usedPrefix}pay [monto] @usuario\nEjemplo: ${usedPrefix}pay 100 @pepito`, m)
+        if (!who) return conn.reply(m.chat, `*Uso:* ${usedPrefix}pay [monto] @usuario`, m)
         if (!monto || monto < 1) return conn.reply(m.chat, `❌ Ingresa un monto válido`, m)
         if (user.lasana < monto) return conn.reply(m.chat, `❌ No tienes suficientes monedas en billetera`, m)
 
-        let target = global.db.data.users[who]
-        if (!target) return conn.reply(m.chat, `❌ Ese usuario no existe en la DB`, m)
-        if (!target.lasana) target.lasana = 0
+        let target = getUser(m, who) // Se crea si no existe
 
         user.lasana -= monto
         target.lasana += monto
         return conn.reply(m.chat, `💸 *TRANSFERENCIA EXITOSA*\n\nEnviado: *${monto}* monedas a @${who.split('@')[0]}\n\n💰 Tu billetera: ${user.lasana}`, m, { mentions: [who] })
     }
 
-    // 3. COMANDO SLOTS / TRAGAMONEDAS
+    // 3. COMANDO SLOTS
     if (command === 'slots' || command === 'slot') {
         let monto = parseInt(args[0])
-        if (!monto || monto < 10) return conn.reply(m.chat, `❌ Apuesta mínima: 10 monedas\n*Uso:* ${usedPrefix}slots [monto]`, m)
+        if (!monto || monto < 10) return conn.reply(m.chat, `❌ Apuesta mínima: 10 monedas`, m)
         if (user.lasana < monto) return conn.reply(m.chat, `❌ No tienes suficientes monedas`, m)
 
         user.lasana -= monto
@@ -74,11 +75,9 @@ let handler = async (m, { conn, args, command, usedPrefix }) => {
         let iguales = s1 === s2 && s2 === s3? 3 : s1 === s2 || s1 === s3 || s2 === s3? 2 : 1
         let multi = iguales === 3? 50 : iguales === 2? 5 : 0
         let gana = monto * multi
-
         if (gana > 0) user.lasana += gana
 
         let resultado = iguales === 3? `🎉 JACKPOT x${multi}!` : iguales === 2? `✨ Ganaste x${multi}!` : `😢 Perdiste`
-
         return conn.reply(m.chat, `🎰 *TRAGAMONEDAS*\n\n[${s1}] [${s2}] [${s3}]\n\n${resultado}\n${gana > 0? `+${gana} monedas` : `-${monto} monedas`}\n\n💰 Total: ${user.lasana}`, m)
     }
 }
