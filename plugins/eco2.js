@@ -144,7 +144,7 @@ handler.before = async (m) => {
 }
 
 handler.help = ['trivia','ruleta [color] [monto]','slots [monto]']
-handler.tags = ['games']
+handler.tags = ['economy']
 handler.command = ['trivia', 'ruleta', 'rlt', 'slots', 'slot']
 export default handler
 
